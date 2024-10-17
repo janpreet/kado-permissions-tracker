@@ -14963,5 +14963,77 @@
         "not_data_actions": []
       }
     ]
+  },
+  {
+    "RoleName": "Service Group Contributor",
+    "Description": "Role Definition for contributor of a Service Group",
+    "Permissions": [
+      {
+        "actions": [
+          "*"
+        ],
+        "not_actions": [
+          "Microsoft.Authorization/roleAssignments/write",
+          "Microsoft.Authorization/roleAssignments/delete"
+        ],
+        "data_actions": [],
+        "not_data_actions": []
+      }
+    ]
+  },
+  {
+    "RoleName": "Service Group Administrator",
+    "Description": "Role Definition for administrator of a Service Group",
+    "Permissions": [
+      {
+        "actions": [
+          "*"
+        ],
+        "not_actions": [
+          "Microsoft.Authorization/roleAssignments/write",
+          "Microsoft.Authorization/roleAssignments/delete"
+        ],
+        "data_actions": [],
+        "not_data_actions": []
+      },
+      {
+        "actions": [
+          "Microsoft.Authorization/roleAssignments/write",
+          "Microsoft.Authorization/roleAssignments/delete"
+        ],
+        "not_actions": [],
+        "data_actions": [],
+        "not_data_actions": []
+      }
+    ]
+  },
+  {
+    "RoleName": "Service Group Reader",
+    "Description": "Role Definition for reader of a Service Group",
+    "Permissions": [
+      {
+        "actions": [
+          "Microsoft.Management/serviceGroups/read",
+          "Microsoft.Authorization/*/read"
+        ],
+        "not_actions": [],
+        "data_actions": [],
+        "not_data_actions": []
+      }
+    ]
+  },
+  {
+    "RoleName": "Cognitive Services Data Contributor (Preview)",
+    "Description": "Allows to call data plane APIs, but not any control plane APIs for Microsoft Cognitive Services. This role is in preview and subject to change.",
+    "Permissions": [
+      {
+        "actions": [],
+        "not_actions": [],
+        "data_actions": [
+          "Microsoft.CognitiveServices/*"
+        ],
+        "not_data_actions": []
+      }
+    ]
   }
 ]
