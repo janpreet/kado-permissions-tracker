@@ -3190,7 +3190,9 @@
           "Microsoft.AppConfiguration/configurationStores/*/delete",
           "Microsoft.AppConfiguration/configurationStores/*/action"
         ],
-        "not_data_actions": []
+        "not_data_actions": [
+          "Microsoft.AppConfiguration/configurationStores/useSasAuth/action"
+        ]
       }
     ]
   },
@@ -15320,6 +15322,40 @@
         ],
         "not_actions": [],
         "data_actions": [],
+        "not_data_actions": []
+      }
+    ]
+  },
+  {
+    "RoleName": "App Configuration Data SAS User",
+    "Description": "Allows the usage of SAS tokens for authentication.",
+    "Permissions": [
+      {
+        "actions": [],
+        "not_actions": [],
+        "data_actions": [
+          "Microsoft.AppConfiguration/configurationStores/useSasAuth/action"
+        ],
+        "not_data_actions": []
+      }
+    ]
+  },
+  {
+    "RoleName": "Health Safeguards Data User",
+    "Description": "Allows processing of health data in all available Health Safeguards",
+    "Permissions": [
+      {
+        "actions": [],
+        "not_actions": [],
+        "data_actions": [
+          "Microsoft.HealthBot/healthBots/HealthSafeguards/ClinicalAnchoring/Process/Action",
+          "Microsoft.HealthBot/healthBots/HealthSafeguards/ClinicalCodesValidation/Process/Action",
+          "Microsoft.HealthBot/healthBots/HealthSafeguards/ClinicalEvidenceVerification/Process/Action",
+          "Microsoft.HealthBot/healthBots/HealthSafeguards/ClinicalProvenance/Process/Action",
+          "Microsoft.HealthBot/healthBots/HealthSafeguards/ClinicalSemanticValidation/Process/Action",
+          "Microsoft.HealthBot/healthBots/HealthSafeguards/DetectHallucinationsAndOmissions/Process/Action",
+          "Microsoft.HealthBot/healthBots/HealthSafeguards/HealthAdaptedFiltering/Process/Action"
+        ],
         "not_data_actions": []
       }
     ]
