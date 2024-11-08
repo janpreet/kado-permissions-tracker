@@ -6876,6 +6876,8 @@
       "Version": "2012-10-17",
       "Statement": [
         {
+          "Sid": "ElasticFileSystemFullAccess",
+          "Effect": "Allow",
           "Action": [
             "cloudwatch:DescribeAlarmsForMetric",
             "cloudwatch:GetMetricData",
@@ -6922,23 +6924,34 @@
             "elasticfilesystem:ListTagsForResource",
             "elasticfilesystem:Backup",
             "elasticfilesystem:Restore",
+            "elasticfilesystem:ReplicationRead",
+            "elasticfilesystem:ReplicationWrite",
             "kms:DescribeKey",
             "kms:ListAliases"
           ],
-          "Sid": "ElasticFileSystemFullAccess",
-          "Effect": "Allow",
           "Resource": "*"
         },
         {
-          "Action": "iam:CreateServiceLinkedRole",
           "Sid": "CreateServiceLinkedRoleForEFS",
           "Effect": "Allow",
+          "Action": "iam:CreateServiceLinkedRole",
           "Resource": "*",
           "Condition": {
             "StringEquals": {
               "iam:AWSServiceName": [
                 "elasticfilesystem.amazonaws.com"
               ]
+            }
+          }
+        },
+        {
+          "Sid": "IAMPassRoleAccessForEFS",
+          "Effect": "Allow",
+          "Action": "iam:PassRole",
+          "Resource": "arn:aws:iam::*:role/*",
+          "Condition": {
+            "StringLike": {
+              "iam:PassedToService": "elasticfilesystem.amazonaws.com"
             }
           }
         }
@@ -6974,6 +6987,7 @@
             "elasticfilesystem:DescribeAccessPoints",
             "elasticfilesystem:DescribeReplicationConfigurations",
             "elasticfilesystem:ListTagsForResource",
+            "elasticfilesystem:ReplicationRead",
             "kms:ListAliases"
           ],
           "Resource": "*"
@@ -34541,7 +34555,9 @@
             "elasticfilesystem:DescribeFileSystems",
             "elasticfilesystem:CreateReplicationConfiguration",
             "elasticfilesystem:DescribeReplicationConfigurations",
-            "elasticfilesystem:DeleteReplicationConfiguration"
+            "elasticfilesystem:DeleteReplicationConfiguration",
+            "elasticfilesystem:ReplicationRead",
+            "elasticfilesystem:ReplicationWrite"
           ],
           "Resource": "*"
         }
@@ -96703,7 +96719,7 @@
         {
           "Effect": "Allow",
           "Action": "iam:AddRoleToInstanceProfile",
-          "Resource": "arn:aws:iam::*:instance-profile/eks-compute-*"
+          "Resource": "arn:aws:iam::*:instance-profile/eks*"
         },
         {
           "Effect": "Allow",
