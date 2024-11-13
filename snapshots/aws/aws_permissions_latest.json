@@ -11424,18 +11424,29 @@
             "invoicing:GetInvoicePDF",
             "invoicing:ListInvoiceSummaries",
             "invoicing:PutInvoiceEmailDeliveryPreferences",
+            "payments:CreateFinancingApplication",
             "payments:CreatePaymentInstrument",
             "payments:DeletePaymentInstrument",
+            "payments:GetFinancingApplication",
+            "payments:GetFinancingLine",
+            "payments:GetFinancingLineWithdrawal",
+            "payments:GetFinancingOption",
             "payments:GetPaymentInstrument",
             "payments:GetPaymentStatus",
+            "payments:ListFinancingApplications",
+            "payments:ListFinancingLines",
+            "payments:ListFinancingLineWithdrawals",
             "payments:ListPaymentPreferences",
+            "payments:ListPaymentProgramOptions",
+            "payments:ListPaymentProgramStatus",
             "payments:ListTagsForResource",
             "payments:ListPaymentInstruments",
             "payments:MakePayment",
             "payments:TagResource",
-            "payments:UpdatePaymentPreferences",
-            "payments:UpdatePaymentInstrument",
             "payments:UntagResource",
+            "payments:UpdateFinancingApplication",
+            "payments:UpdatePaymentInstrument",
+            "payments:UpdatePaymentPreferences",
             "pricing:DescribeServices",
             "purchase-orders:AddPurchaseOrder",
             "purchase-orders:DeletePurchaseOrder",
@@ -40542,7 +40553,7 @@
             "*"
           ],
           "Condition": {
-            "StringLike": {
+            "ArnLike": {
               "lambda:FunctionArn": [
                 "arn:aws:lambda:*:*:function:DeadlineResourceTracker*"
               ]
@@ -40887,7 +40898,7 @@
           "Action": "ec2:RunInstances",
           "Resource": "arn:aws:ec2:*:*:instance/*",
           "Condition": {
-            "StringLike": {
+            "ArnLike": {
               "ec2:InstanceProfile": "arn:aws:iam::*:instance-profile/AWSPortal*"
             }
           }
@@ -40909,8 +40920,8 @@
           "Action": "ec2:TerminateInstances",
           "Resource": "*",
           "Condition": {
-            "StringLike": {
-              "ec2:ResourceTag/aws:ec2spot:fleet-request-id": "*"
+            "Null": {
+              "ec2:ResourceTag/aws:ec2spot:fleet-request-id": false
             }
           }
         },
@@ -40920,8 +40931,8 @@
           "Action": "ec2:TerminateInstances",
           "Resource": "*",
           "Condition": {
-            "StringLike": {
-              "ec2:PlacementGroup": "*DeadlinePlacementGroup*"
+            "ArnLike": {
+              "ec2:PlacementGroup": "arn:aws:ec2:*:*:placement-group/*DeadlinePlacementGroup*"
             }
           }
         },
@@ -40933,8 +40944,8 @@
           ],
           "Resource": "arn:aws:ec2:*:*:instance/*",
           "Condition": {
-            "StringLike": {
-              "ec2:PlacementGroup": "*DeadlinePlacementGroup*"
+            "ArnLike": {
+              "ec2:PlacementGroup": "arn:aws:ec2:*:*:placement-group/*DeadlinePlacementGroup*"
             }
           }
         },
@@ -43691,11 +43702,20 @@
             "invoicing:GetInvoiceEmailDeliveryPreferences",
             "invoicing:GetInvoicePDF",
             "invoicing:ListInvoiceSummaries",
+            "payments:GetFinancingApplication",
+            "payments:GetFinancingLine",
+            "payments:GetFinancingLineWithdrawal",
+            "payments:GetFinancingOption",
             "payments:GetPaymentInstrument",
             "payments:GetPaymentStatus",
-            "payments:ListPaymentPreferences",
-            "payments:ListTagsForResource",
+            "payments:ListFinancingApplications",
+            "payments:ListFinancingLines",
+            "payments:ListFinancingLineWithdrawals",
             "payments:ListPaymentInstruments",
+            "payments:ListPaymentPreferences",
+            "payments:ListPaymentProgramOptions",
+            "payments:ListPaymentProgramStatus",
+            "payments:ListTagsForResource",
             "purchase-orders:GetPurchaseOrder",
             "purchase-orders:ViewPurchaseOrders",
             "purchase-orders:ListPurchaseOrderInvoices",
@@ -84618,81 +84638,56 @@
           "Sid": "AllowConnectActions",
           "Effect": "Allow",
           "Action": [
-            "connect:CreateUser*",
-            "connect:UpdateUser*",
-            "connect:DeleteUser*",
-            "connect:DescribeUser*",
-            "connect:ListUser*",
-            "connect:CreateRoutingProfile",
-            "connect:UpdateRoutingProfile*",
-            "connect:DeleteRoutingProfile",
-            "connect:DescribeRoutingProfile",
-            "connect:ListRoutingProfile*",
-            "connect:CreateAgentStatus",
-            "connect:UpdateAgentStatus",
-            "connect:DescribeAgentStatus",
-            "connect:ListAgentStatuses",
-            "connect:CreateQuickConnect",
-            "connect:UpdateQuickConnect*",
-            "connect:DeleteQuickConnect",
-            "connect:DescribeQuickConnect",
-            "connect:ListQuickConnects",
-            "connect:CreateHoursOfOperation",
-            "connect:UpdateHoursOfOperation",
-            "connect:DeleteHoursOfOperation",
-            "connect:DescribeHoursOfOperation",
-            "connect:ListHoursOfOperations",
-            "connect:CreateQueue",
-            "connect:UpdateQueue*",
-            "connect:DeleteQueue",
-            "connect:DescribeQueue",
-            "connect:ListQueue*",
-            "connect:CreatePrompt",
-            "connect:UpdatePrompt",
-            "connect:DeletePrompt",
-            "connect:DescribePrompt",
-            "connect:ListPrompts",
-            "connect:GetPromptFile",
-            "connect:CreateSecurityProfile",
-            "connect:UpdateSecurityProfile",
-            "connect:DeleteSecurityProfile",
-            "connect:DescribeSecurityProfile",
-            "connect:ListSecurityProfile*",
-            "connect:CreateContactFlow*",
-            "connect:UpdateContactFlow*",
-            "connect:DeleteContactFlow*",
-            "connect:DescribeContactFlow*",
-            "connect:ListContactFlow*",
-            "connect:BatchGetFlowAssociation",
-            "connect:CreatePredefinedAttribute",
-            "connect:UpdatePredefinedAttribute",
-            "connect:DeletePredefinedAttribute",
-            "connect:DescribePredefinedAttribute",
-            "connect:ListPredefinedAttributes",
-            "connect:ListTagsForResource",
+            "connect:Create*",
+            "connect:Update*",
+            "connect:Delete*",
+            "connect:Describe*",
+            "connect:List*",
+            "connect:Search*",
+            "connect:Associate*",
+            "connect:Disassociate*",
+            "connect:Get*",
+            "connect:BatchGet*",
             "connect:TagResource",
-            "connect:UntagResource",
-            "connect:ListTrafficDistributionGroups",
-            "connect:ListPhoneNumbersV2",
-            "connect:UpdatePhoneNumber",
-            "connect:DescribePhoneNumber",
-            "connect:AssociatePhoneNumberContactFlow",
-            "connect:DisassociatePhoneNumberContactFlow",
-            "connect:AssociateRoutingProfileQueues",
-            "connect:DisassociateQueueQuickConnects",
-            "connect:AssociateQueueQuickConnects",
-            "connect:DisassociateUserProficiencies",
-            "connect:AssociateUserProficiencies",
-            "connect:DisassociateRoutingProfileQueues",
-            "connect:CreateAuthenticationProfile",
-            "connect:UpdateAuthenticationProfile",
-            "connect:DescribeAuthenticationProfile",
-            "connect:ListAuthenticationProfiles",
-            "connect:CreateHoursOfOperationOverride",
-            "connect:UpdateHoursOfOperationOverride",
-            "connect:DeleteHoursOfOperationOverride",
-            "connect:DescribeHoursOfOperationOverride",
-            "connect:ListHoursOfOperationOverrides"
+            "connect:UntagResource"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "DisallowedConnectActions",
+          "Effect": "Deny",
+          "Action": [
+            "connect:Start*",
+            "connect:Stop*",
+            "connect:Resume*",
+            "connect:Suspend*",
+            "connect:*Contact",
+            "connect:SearchContacts",
+            "connect:*ContactAttributes*",
+            "connect:*RealtimeContact*",
+            "connect:*AnalyticsData*",
+            "connect:*MetricData*",
+            "connect:*UserData*",
+            "connect:*ContactEvaluation",
+            "connect:*AttachedFile*",
+            "connect:UpdateContactSchedule",
+            "connect:UpdateContactRoutingData",
+            "connect:ListContactReferences",
+            "connect:CreateParticipant",
+            "connect:CreatePersistentContactAssociation",
+            "connect:CreateInstance",
+            "connect:DeleteInstance",
+            "connect:ListInstances",
+            "connect:ReplicateInstance",
+            "connect:GetFederationToken",
+            "connect:ClaimPhoneNumber",
+            "connect:ImportPhoneNumber",
+            "connect:ReleasePhoneNumber",
+            "connect:SearchAvailablePhoneNumbers",
+            "connect:CreateTrafficDistributionGroup",
+            "connect:DeleteTrafficDistributionGroup",
+            "connect:GetTrafficDistribution",
+            "connect:UpdateTrafficDistribution"
           ],
           "Resource": "*"
         },
@@ -96781,6 +96776,188 @@
               ]
             }
           }
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "GameLiftContainerFleetPolicy",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "WriteGameSessionLogsToLogStream",
+          "Effect": "Allow",
+          "Action": [
+            "logs:CreateLogStream",
+            "logs:PutLogEvents",
+            "logs:PutRetentionPolicy"
+          ],
+          "Resource": "arn:aws:logs:*:*:log-group:gamelift-*:log-stream:*"
+        },
+        {
+          "Sid": "CreateLogGroupToStoreGameSessionLogs",
+          "Effect": "Allow",
+          "Action": "logs:CreateLogGroup",
+          "Resource": "arn:aws:logs:*:*:log-group:gamelift-*"
+        },
+        {
+          "Sid": "WriteGameSessionLogsToS3Bucket",
+          "Effect": "Allow",
+          "Action": [
+            "s3:PutObject"
+          ],
+          "Resource": [
+            "arn:aws:s3:::gamelift-*"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "s3:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        },
+        {
+          "Sid": "RetrieveComputeAuthToken",
+          "Effect": "Allow",
+          "Action": [
+            "gamelift:GetComputeAuthToken"
+          ],
+          "Resource": [
+            "arn:aws:gamelift:*:*:containerfleet/*"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AmazonDataZoneBedrockModelManagementPolicy",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "ManageApplicationInferenceProfile",
+          "Effect": "Allow",
+          "Action": [
+            "bedrock:CreateInferenceProfile",
+            "bedrock:TagResource"
+          ],
+          "Resource": [
+            "arn:aws:bedrock:*:*:application-inference-profile/*"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            },
+            "ForAnyValue:StringEquals": {
+              "aws:TagKeys": [
+                "AmazonDataZoneProject"
+              ]
+            },
+            "Null": {
+              "aws:ResourceTag/AmazonDataZoneProject": "false",
+              "aws:RequestTag/AmazonDataZoneProject": "false"
+            }
+          }
+        },
+        {
+          "Sid": "DeleteApplicationInferenceProfile",
+          "Effect": "Allow",
+          "Action": [
+            "bedrock:DeleteInferenceProfile"
+          ],
+          "Resource": [
+            "arn:aws:bedrock:*:*:application-inference-profile/*"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            },
+            "Null": {
+              "aws:ResourceTag/AmazonDataZoneProject": "false"
+            }
+          }
+        },
+        {
+          "Sid": "CreateApplicationInferenceProfileUsingFoundationModels",
+          "Effect": "Allow",
+          "Action": [
+            "bedrock:CreateInferenceProfile"
+          ],
+          "Resource": [
+            "arn:aws:bedrock:*::foundation-model/*"
+          ]
+        },
+        {
+          "Sid": "CreateApplicationInferenceProfileUsingBedrockModels",
+          "Effect": "Allow",
+          "Action": [
+            "bedrock:CreateInferenceProfile"
+          ],
+          "Resource": [
+            "arn:aws:bedrock:*:*:inference-profile/*"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AmazonDataZoneBedrockModelConsumptionPolicy",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "InvokeDomainInferenceProfiles",
+          "Effect": "Allow",
+          "Action": [
+            "bedrock:InvokeModel",
+            "bedrock:InvokeModelWithResponseStream"
+          ],
+          "Resource": "arn:aws:bedrock:*:*:application-inference-profile/*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceTag/AmazonDataZoneDomain": "${datazone:domainId}",
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            },
+            "Null": {
+              "aws:ResourceTag/AmazonDataZoneProject": "true"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "CloudWatchInternetMonitorReadOnlyAccess",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "ReadOnlyActions",
+          "Effect": "Allow",
+          "Action": [
+            "cloudwatch:GetMetricData",
+            "internetmonitor:GetHealthEvent",
+            "internetmonitor:GetInternetEvent",
+            "internetmonitor:GetMonitor",
+            "internetmonitor:GetQueryResults",
+            "internetmonitor:GetQueryStatus",
+            "internetmonitor:ListHealthEvents",
+            "internetmonitor:ListInternetEvents",
+            "internetmonitor:ListMonitors",
+            "internetmonitor:ListTagsForResource",
+            "internetmonitor:StartQuery",
+            "internetmonitor:StopQuery",
+            "logs:DescribeLogGroups",
+            "logs:GetQueryResults",
+            "logs:StartQuery",
+            "logs:StopQuery"
+          ],
+          "Resource": "*"
         }
       ]
     }
