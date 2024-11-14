@@ -58371,6 +58371,7 @@
       "Version": "2012-10-17",
       "Statement": [
         {
+          "Sid": "KMSSynchronizeMultiRegionKey",
           "Effect": "Allow",
           "Action": [
             "kms:SynchronizeMultiRegionKey"
@@ -86899,7 +86900,16 @@
             "q:GetIdentityMetadata",
             "q:CreateAssignment",
             "q:DeleteAssignment",
-            "q:GenerateCodeFromCommands"
+            "q:GenerateCodeFromCommands",
+            "q:CreatePlugin",
+            "q:DeletePlugin",
+            "q:GetPlugin",
+            "q:UsePlugin",
+            "q:ListPlugins",
+            "q:ListPluginProviders",
+            "q:ListTagsForResource",
+            "q:UntagResource",
+            "q:TagResource"
           ],
           "Resource": "*"
         },
@@ -86919,6 +86929,21 @@
             "sts:SetContext"
           ],
           "Resource": "arn:aws:sts::*:self"
+        },
+        {
+          "Sid": "AllowPassRoleToAmazonQ",
+          "Effect": "Allow",
+          "Action": [
+            "iam:PassRole"
+          ],
+          "Resource": "arn:aws:iam::*:role/*",
+          "Condition": {
+            "StringEquals": {
+              "iam:PassedToService": [
+                "q.amazonaws.com"
+              ]
+            }
+          }
         }
       ]
     }
@@ -94538,7 +94563,8 @@
             "q:GetTroubleshootingResults",
             "q:UpdateTroubleshootingCommandResult",
             "q:GetIdentityMetaData",
-            "q:GenerateCodeFromCommands"
+            "q:GenerateCodeFromCommands",
+            "q:UsePlugin"
           ],
           "Resource": "*"
         },
@@ -96956,6 +96982,37 @@
             "logs:GetQueryResults",
             "logs:StartQuery",
             "logs:StopQuery"
+          ],
+          "Resource": "*"
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AmazonODBServiceRolePolicy",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "CloudWatch",
+          "Effect": "Allow",
+          "Action": [
+            "cloudwatch:PutMetricData"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "cloudwatch:namespace": [
+                "AWS/ODB"
+              ]
+            }
+          }
+        },
+        {
+          "Sid": "EC2",
+          "Effect": "Allow",
+          "Action": [
+            "ec2:DescribeAvailabilityZones"
           ],
           "Resource": "*"
         }
