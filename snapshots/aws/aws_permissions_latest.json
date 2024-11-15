@@ -25602,6 +25602,23 @@
               "iam:PassedToService": "ses.amazonaws.com"
             }
           }
+        },
+        {
+          "Sid": "AllowSocialMessagingOperations",
+          "Effect": "Allow",
+          "Action": [
+            "social-messaging:SendWhatsAppMessage",
+            "social-messaging:PostWhatsAppMessageMedia",
+            "social-messaging:GetWhatsAppMessageMedia",
+            "social-messaging:GetLinkedWhatsAppBusinessAccountPhoneNumber"
+          ],
+          "Resource": "arn:aws:social-messaging:*:*:phone-number-id/*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceTag/AmazonConnectEnabled": "True",
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
         }
       ]
     }
@@ -34005,6 +34022,19 @@
     "PolicyDocument": {
       "Version": "2012-10-17",
       "Statement": [
+        {
+          "Sid": "AllowFSxDescribe",
+          "Effect": "Allow",
+          "Action": [
+            "fsx:DescribeFileSystems"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        },
         {
           "Sid": "AllowSageMakerDeleteApp",
           "Effect": "Allow",
@@ -72256,6 +72286,7 @@
           "Action": [
             "access-analyzer:ListAnalyzers",
             "acm-pca:ListCertificateAuthorities",
+            "acm:ListCertificates",
             "airflow:ListEnvironments",
             "amplify:ListApps",
             "amplify:ListBackendEnvironments",
@@ -72313,21 +72344,29 @@
             "codeguru-profiler:ListProfilingGroups",
             "codeguru-reviewer:ListRepositoryAssociations",
             "codepipeline:ListPipelines",
+            "codepipeline:ListWebhooks",
             "codestar-connections:ListConnections",
             "cognito-identity:ListIdentityPools",
             "cognito-idp:ListUserPools",
+            "comprehend:ListDocumentClassifiers",
+            "comprehend:ListEntityRecognizers",
             "connect:ListInstances",
             "connect:ListQuickConnects",
             "connect:ListUsers",
             "databrew:ListDatasets",
+            "databrew:ListJobs",
+            "databrew:ListProjects",
             "databrew:ListRecipes",
             "databrew:ListRulesets",
             "databrew:ListSchedules",
+            "dataexchange:ListDataSets",
             "datasync:ListLocations",
             "datasync:ListTasks",
             "detective:ListGraphs",
             "dms:DescribeEndpoints",
+            "dms:DescribeEventSubscriptions",
             "dms:DescribeReplicationInstances",
+            "dms:DescribeReplicationSubnetGroups",
             "dms:DescribeReplicationTasks",
             "ds:DescribeDirectories",
             "dynamodb:ListStreams",
@@ -72428,6 +72467,8 @@
             "elasticloadbalancing:DescribeLoadBalancers",
             "elasticloadbalancing:DescribeRules",
             "elasticloadbalancing:DescribeTargetGroups",
+            "elasticmapreduce:ListClusters",
+            "emr-containers:ListVirtualClusters",
             "emr-serverless:ListApplications",
             "es:ListDomainNames",
             "events:ListEventBuses",
@@ -72444,9 +72485,12 @@
             "frauddetector:GetDetectors",
             "frauddetector:GetEntityTypes",
             "frauddetector:GetEventTypes",
+            "frauddetector:GetExternalModels",
             "frauddetector:GetLabels",
+            "frauddetector:GetModels",
             "frauddetector:GetOutcomes",
             "frauddetector:GetVariables",
+            "fsx:DescribeFileSystems",
             "gamelift:DescribeGameSessionQueues",
             "gamelift:DescribeMatchmakingConfigurations",
             "gamelift:DescribeMatchmakingRuleSets",
@@ -72454,9 +72498,11 @@
             "gamelift:ListBuilds",
             "geo:ListPlaceIndexes",
             "geo:ListTrackers",
+            "glacier:ListVaults",
             "globalaccelerator:ListAccelerators",
             "globalaccelerator:ListEndpointGroups",
             "globalaccelerator:ListListeners",
+            "glue:GetCrawlers",
             "glue:GetDatabases",
             "glue:GetJobs",
             "glue:GetTables",
@@ -72464,7 +72510,14 @@
             "glue:ListMLTransforms",
             "greengrass:ListComponentVersions",
             "greengrass:ListComponents",
+            "greengrass:ListConnectorDefinitions",
+            "greengrass:ListCoreDefinitions",
+            "greengrass:ListDeviceDefinitions",
+            "greengrass:ListFunctionDefinitions",
             "greengrass:ListGroups",
+            "greengrass:ListLoggerDefinitions",
+            "greengrass:ListResourceDefinitions",
+            "greengrass:ListSubscriptionDefinitions",
             "groundstation:ListConfigs",
             "guardduty:ListDetectors",
             "guardduty:ListFilters",
@@ -72625,6 +72678,7 @@
             "route53-recovery-readiness:ListResourceSets",
             "route53:ListHealthChecks",
             "route53:ListHostedZones",
+            "route53domains:ListDomains",
             "route53resolver:ListFirewallDomainLists",
             "route53resolver:ListFirewallRuleGroups",
             "route53resolver:ListResolverEndpoints",
@@ -72645,6 +72699,9 @@
             "secretsmanager:ListSecrets",
             "servicecatalog:ListApplications",
             "servicecatalog:ListAttributeGroups",
+            "ses:ListConfigurationSets",
+            "ses:ListContactLists",
+            "ses:ListEmailIdentities",
             "signer:ListSigningProfiles",
             "sns:ListTopics",
             "sqs:ListQueues",
@@ -72662,6 +72719,7 @@
             "ssm:ListResourceDataSync",
             "states:ListActivities",
             "states:ListStateMachines",
+            "storagegateway:ListGateways",
             "timestream:ListDatabases",
             "transfer:ListWorkflows",
             "wisdom:ListAssistants",
@@ -84534,7 +84592,8 @@
             "logs:FilterLogEvents"
           ],
           "Resource": [
-            "arn:aws:logs:*:*:log-group:/aws/lambda/amplify-*:*"
+            "arn:aws:logs:*:*:log-group:/aws/lambda/amplify-*:*",
+            "arn:aws:logs:*:*:log-group:amplify-*:*"
           ]
         },
         {
@@ -97015,6 +97074,510 @@
             "ec2:DescribeAvailabilityZones"
           ],
           "Resource": "*"
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "SMSVoiceServiceRolePolicy",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": "cloudwatch:PutMetricData",
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "cloudwatch:namespace": "AWS/SMSVoice"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AWSPartnerCentralOpportunityManagement",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "OpportunityManagement",
+          "Effect": "Allow",
+          "Action": [
+            "partnercentral:AcceptEngagementInvitation",
+            "partnercentral:AssignOpportunity",
+            "partnercentral:AssociateOpportunity",
+            "partnercentral:CreateOpportunity",
+            "partnercentral:DisassociateOpportunity",
+            "partnercentral:GetAwsOpportunitySummary",
+            "partnercentral:GetEngagementInvitation",
+            "partnercentral:GetOpportunity",
+            "partnercentral:ListEngagementInvitations",
+            "partnercentral:ListOpportunities",
+            "partnercentral:ListSolutions",
+            "partnercentral:RejectEngagementInvitation",
+            "partnercentral:StartEngagementByAcceptingInvitationTask",
+            "partnercentral:StartEngagementFromOpportunityTask",
+            "partnercentral:SubmitOpportunity",
+            "partnercentral:UpdateOpportunity"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "ListingAWSMarketplaceEntities",
+          "Effect": "Allow",
+          "Action": [
+            "aws-marketplace:ListEntities"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "AWSMarketplaceOffersAccess",
+          "Effect": "Allow",
+          "Action": [
+            "aws-marketplace:DescribeEntity"
+          ],
+          "Resource": [
+            "arn:aws:aws-marketplace:*:*:AWSMarketplace/Offer/*"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AWSPartnerCentralSandboxFullAccess",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "AWSPartnerCentralSandboxAccess",
+          "Effect": "Allow",
+          "Action": [
+            "partnercentral:*"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "partnercentral:Catalog": "Sandbox"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "SecurityLakeResourceManagementServiceRolePolicy",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "ReadEventBridgeRules",
+          "Effect": "Allow",
+          "Action": [
+            "events:ListRules"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        },
+        {
+          "Sid": "ManageSecurityLakeEventRules",
+          "Effect": "Allow",
+          "Action": [
+            "events:PutRule"
+          ],
+          "Resource": "arn:aws:events:*:*:rule/AmazonSecurityLake-*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        },
+        {
+          "Sid": "ManageSecurityLakeLambdaConfigurations",
+          "Effect": "Allow",
+          "Action": [
+            "lambda:GetEventSourceMapping",
+            "lambda:GetFunction",
+            "lambda:PutFunctionConcurrency",
+            "lambda:GetProvisionedConcurrencyConfig",
+            "lambda:GetFunctionConcurrency",
+            "lambda:GetRuntimeManagementConfig",
+            "lambda:PutProvisionedConcurrencyConfig",
+            "lambda:PublishVersion",
+            "lambda:DeleteFunctionConcurrency",
+            "lambda:DeleteEventSourceMapping",
+            "lambda:GetAlias",
+            "lambda:GetPolicy",
+            "lambda:GetFunctionConfiguration",
+            "lambda:UpdateFunctionConfiguration"
+          ],
+          "Resource": [
+            "arn:aws:lambda:*:*:function:SecurityLake_Glue_Partition_Updater_Lambda*",
+            "arn:aws:lambda:*:*:function:AmazonSecurityLakeMetastoreManager-*-*"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        },
+        {
+          "Sid": "AllowListLambdaEventSourceMappings",
+          "Effect": "Allow",
+          "Action": [
+            "lambda:ListEventSourceMappings"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        },
+        {
+          "Sid": "AllowUpdateLambdaEventSourceMapping",
+          "Effect": "Allow",
+          "Action": [
+            "lambda:UpdateEventSourceMapping"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            },
+            "StringLike": {
+              "lambda:FunctionArn": "arn:aws:lambda:*:*:function:AmazonSecurityLakeMetastoreManager-*-*"
+            }
+          }
+        },
+        {
+          "Sid": "AllowUpdateLambdaConfigs",
+          "Effect": "Allow",
+          "Action": [
+            "lambda:UpdateFunctionConfiguration"
+          ],
+          "Resource": "arn:aws:lambda:*:*:function:AmazonSecurityLakeMetastoreManager-*-*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        },
+        {
+          "Sid": "ManageSecurityLakeGlueResources",
+          "Effect": "Allow",
+          "Action": [
+            "glue:CreatePartition",
+            "glue:BatchCreatePartition",
+            "glue:GetTable",
+            "glue:GetTables",
+            "glue:UpdateTable",
+            "glue:GetDatabase"
+          ],
+          "Resource": [
+            "arn:aws:glue:*:*:table/amazon_security_lake_glue_db*/*",
+            "arn:aws:glue:*:*:database/amazon_security_lake_glue_db*",
+            "arn:aws:glue:*:*:catalog"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        },
+        {
+          "Sid": "AllowDataLakeConfigurationManagement",
+          "Effect": "Allow",
+          "Action": [
+            "s3:ListBucket",
+            "s3:PutObject",
+            "s3:GetObjectAttributes",
+            "s3:GetBucketNotification",
+            "s3:PutBucketNotification",
+            "s3:GetLifecycleConfiguration",
+            "s3:PutLifecycleConfiguration",
+            "s3:GetEncryptionConfiguration",
+            "s3:GetReplicationConfiguration"
+          ],
+          "Resource": [
+            "arn:aws:s3:::aws-security-data-lake*"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        },
+        {
+          "Sid": "AllowMetaDataCompactionAndManagement",
+          "Effect": "Allow",
+          "Action": [
+            "s3:GetObject",
+            "s3:DeleteObject",
+            "s3:RestoreObject"
+          ],
+          "Resource": [
+            "arn:aws:s3:::aws-security-data-lake*/metadata/*.avro",
+            "arn:aws:s3:::aws-security-data-lake*/metadata/*.metadata.json"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        },
+        {
+          "Sid": "ReadSecurityLakeLambdaLogs",
+          "Effect": "Allow",
+          "Action": [
+            "logs:DescribeLogStreams",
+            "logs:StartQuery",
+            "logs:GetLogEvents",
+            "logs:GetQueryResults",
+            "logs:GetLogRecord"
+          ],
+          "Resource": [
+            "arn:aws:logs:*:*:log-group:/aws/lambda/AmazonSecurityLakeMetastoreManager-*-*"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        },
+        {
+          "Sid": "ManageSecurityLakeSQSQueue",
+          "Effect": "Allow",
+          "Action": [
+            "sqs:StartMessageMoveTask",
+            "sqs:DeleteMessage",
+            "sqs:GetQueueUrl",
+            "sqs:ListDeadLetterSourceQueues",
+            "sqs:ChangeMessageVisibility",
+            "sqs:ListMessageMoveTasks",
+            "sqs:ReceiveMessage",
+            "sqs:SendMessage",
+            "sqs:GetQueueAttributes",
+            "sqs:SetQueueAttributes"
+          ],
+          "Resource": [
+            "arn:aws:sqs:*:*:SecurityLake_*",
+            "arn:aws:sqs:*:*:AmazonSecurityLakeManager-*"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        },
+        {
+          "Sid": "AllowDataLakeManagement",
+          "Effect": "Allow",
+          "Action": [
+            "lakeformation:GetDataLakeSettings",
+            "lakeformation:ListPermissions"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "SQSUnlockQueuePolicy",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "DenyAllOtherActionsOnAnyResource",
+          "Effect": "Deny",
+          "NotAction": [
+            "sqs:SetQueueAttributes",
+            "sqs:GetQueueAttributes",
+            "sqs:ListQueues",
+            "sqs:GetQueueUrl"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "DenyGettingQueueAttributesOnNonOwnQueue",
+          "Effect": "Deny",
+          "Action": [
+            "sqs:GetQueueAttributes"
+          ],
+          "Resource": "arn:aws:sqs:*:*:*",
+          "Condition": {
+            "StringNotEqualsIfExists": {
+              "aws:ResourceAccount": [
+                "${aws:PrincipalAccount}"
+              ]
+            }
+          }
+        },
+        {
+          "Sid": "DenyActionsForNonRootUser",
+          "Effect": "Deny",
+          "Action": [
+            "sqs:SetQueueAttributes",
+            "sqs:GetQueueAttributes",
+            "sqs:ListQueues",
+            "sqs:GetQueueUrl"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringNotLike": {
+              "aws:PrincipalArn": "arn:aws:iam::*:root"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "S3UnlockBucketPolicy",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "DenyAllOtherActionsOnAnyResource",
+          "Effect": "Deny",
+          "NotAction": [
+            "s3:DeleteBucketPolicy",
+            "s3:PutBucketPolicy",
+            "s3:GetBucketPolicy",
+            "s3:ListAllMyBuckets"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "DenyManagingBucketPolicyForNonRootCallers",
+          "Effect": "Deny",
+          "Action": [
+            "s3:DeleteBucketPolicy",
+            "s3:PutBucketPolicy",
+            "s3:GetBucketPolicy",
+            "s3:ListAllMyBuckets"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringNotLike": {
+              "aws:PrincipalArn": "arn:aws:iam::*:root"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "IAMAuditRootUserCredentials",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "DenyAllOtherActionsOnAnyResource",
+          "Effect": "Deny",
+          "NotAction": [
+            "iam:ListAccessKeys",
+            "iam:ListSigningCertificates",
+            "iam:GetLoginProfile",
+            "iam:ListMFADevices",
+            "iam:GetAccountSummary",
+            "iam:GetUser",
+            "iam:GetAccessKeyLastUsed"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "DenyAuditingCredentialsOnNonRootUserResource",
+          "Effect": "Deny",
+          "Action": [
+            "iam:ListAccessKeys",
+            "iam:ListSigningCertificates",
+            "iam:GetLoginProfile",
+            "iam:ListMFADevices",
+            "iam:GetUser",
+            "iam:GetAccessKeyLastUsed"
+          ],
+          "NotResource": "arn:aws:iam::*:root"
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "IAMCreateRootUserPassword",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "DenyAllOtherActionsOnAnyResource",
+          "Effect": "Deny",
+          "NotAction": [
+            "iam:CreateLoginProfile",
+            "iam:GetLoginProfile"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "DenyCreatingPasswordOnNonRootUserResource",
+          "Effect": "Deny",
+          "Action": [
+            "iam:CreateLoginProfile",
+            "iam:GetLoginProfile"
+          ],
+          "NotResource": "arn:aws:iam::*:root"
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "IAMDeleteRootUserCredentials",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "DenyAllOtherActionsOnAnyResource",
+          "Effect": "Deny",
+          "NotAction": [
+            "iam:DeleteAccessKey",
+            "iam:DeleteSigningCertificate",
+            "iam:DeleteLoginProfile",
+            "iam:DeactivateMFADevice",
+            "iam:DeleteVirtualMFADevice",
+            "iam:ListAccessKeys",
+            "iam:ListSigningCertificates",
+            "iam:GetLoginProfile",
+            "iam:ListMFADevices",
+            "iam:GetUser",
+            "iam:GetAccessKeyLastUsed"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "DenyDeletingRootUserCredentialsOnNonRootUserResource",
+          "Effect": "Deny",
+          "Action": [
+            "iam:DeleteAccessKey",
+            "iam:DeleteSigningCertificate",
+            "iam:DeleteLoginProfile",
+            "iam:DeactivateMFADevice",
+            "iam:DeleteVirtualMFADevice",
+            "iam:ListAccessKeys",
+            "iam:ListSigningCertificates",
+            "iam:GetLoginProfile",
+            "iam:ListMFADevices",
+            "iam:GetUser",
+            "iam:GetAccessKeyLastUsed"
+          ],
+          "NotResource": "arn:aws:iam::*:root"
         }
       ]
     }
