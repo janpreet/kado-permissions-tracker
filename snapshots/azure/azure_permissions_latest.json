@@ -15497,5 +15497,27 @@
         "not_data_actions": []
       }
     ]
+  },
+  {
+    "RoleName": "Quantum Workspace Data Contributor",
+    "Description": "Create, read, and modify jobs and other Workspace data. This role is in preview and subject to change.",
+    "Permissions": [
+      {
+        "actions": [
+          "Microsoft.Authorization/*/read",
+          "Microsoft.Insights/alertRules/*",
+          "Microsoft.Resources/deployments/*",
+          "Microsoft.Resources/subscriptions/resourceGroups/read",
+          "Microsoft.Quantum/Workspaces/read",
+          "Microsoft.Quantum/locations/offerings/read"
+        ],
+        "not_actions": [],
+        "data_actions": [
+          "Microsoft.Quantum/Workspaces/jobs/read",
+          "Microsoft.Quantum/Workspaces/jobs/write"
+        ],
+        "not_data_actions": []
+      }
+    ]
   }
 ]
