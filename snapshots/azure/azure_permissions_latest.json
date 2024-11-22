@@ -944,7 +944,9 @@
           "Microsoft.Compute/galleries/share/action",
           "Microsoft.Purview/consents/write",
           "Microsoft.Purview/consents/delete",
-          "Microsoft.Resources/deploymentStacks/manageDenySetting/action"
+          "Microsoft.Resources/deploymentStacks/manageDenySetting/action",
+          "Microsoft.Subscription/cancel/action",
+          "Microsoft.Subscription/enable/action"
         ],
         "data_actions": [],
         "not_data_actions": []
@@ -15516,6 +15518,50 @@
           "Microsoft.Quantum/Workspaces/jobs/read",
           "Microsoft.Quantum/Workspaces/jobs/write"
         ],
+        "not_data_actions": []
+      }
+    ]
+  },
+  {
+    "RoleName": "Communication and Email Service Owner",
+    "Description": "Create, read, modify, and delete Communications and Email Service resources.",
+    "Permissions": [
+      {
+        "actions": [
+          "Microsoft.Communication/CheckNameAvailability/action",
+          "Microsoft.Communication/Locations/OperationStatuses/read",
+          "Microsoft.Communication/Locations/OperationStatuses/write",
+          "Microsoft.Communication/Operations/read",
+          "Microsoft.Communication/CommunicationServices/read",
+          "Microsoft.Communication/CommunicationServices/write",
+          "Microsoft.Communication/CommunicationServices/delete",
+          "Microsoft.Communication/CommunicationServices/ListKeys/action",
+          "Microsoft.Communication/CommunicationServices/RegenerateKey/action",
+          "Microsoft.Communication/CommunicationServices/LinkNotificationHub/action",
+          "Microsoft.Communication/CommunicationServices/EventGridFilters/read",
+          "Microsoft.Communication/CommunicationServices/EventGridFilters/write",
+          "Microsoft.Communication/CommunicationServices/EventGridFilters/delete",
+          "Microsoft.Communication/EmailServices/read",
+          "Microsoft.Communication/EmailServices/write",
+          "Microsoft.Communication/EmailServices/delete",
+          "Microsoft.Communication/EmailServices/Domains/read",
+          "Microsoft.Communication/EmailServices/Domains/write",
+          "Microsoft.Communication/EmailServices/Domains/delete",
+          "Microsoft.Communication/EmailServices/Domains/SenderUsernames/read",
+          "Microsoft.Communication/EmailServices/Domains/SenderUsernames/write",
+          "Microsoft.Communication/EmailServices/Domains/SenderUsernames/delete",
+          "Microsoft.Communication/EmailServices/Domains/SuppressionLists/read",
+          "Microsoft.Communication/EmailServices/Domains/SuppressionLists/write",
+          "Microsoft.Communication/EmailServices/Domains/SuppressionLists/delete",
+          "Microsoft.Communication/EmailServices/Domains/SuppressionLists/SuppressionListAddresses/read",
+          "Microsoft.Communication/EmailServices/Domains/SuppressionLists/SuppressionListAddresses/write",
+          "Microsoft.Communication/EmailServices/Domains/SuppressionLists/SuppressionListAddresses/delete",
+          "Microsoft.Communication/EmailServices/Domains/InitiateVerification/action",
+          "Microsoft.Communication/EmailServices/Domains/CancelVerification/action",
+          "Microsoft.Communication/EmailServices/Domains/*"
+        ],
+        "not_actions": [],
+        "data_actions": [],
         "not_data_actions": []
       }
     ]
