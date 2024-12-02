@@ -11465,10 +11465,19 @@
             "freetier:GetFreeTierAlertPreference",
             "freetier:GetFreeTierUsage",
             "freetier:PutFreeTierAlertPreference",
+            "invoicing:BatchGetInvoiceProfile",
+            "invoicing:CreateInvoiceUnit",
+            "invoicing:DeleteInvoiceUnit",
             "invoicing:GetInvoiceEmailDeliveryPreferences",
             "invoicing:GetInvoicePDF",
+            "invoicing:GetInvoiceUnit",
             "invoicing:ListInvoiceSummaries",
+            "invoicing:ListInvoiceUnits",
+            "invoicing:ListTagsForResource",
             "invoicing:PutInvoiceEmailDeliveryPreferences",
+            "invoicing:TagResource",
+            "invoicing:UntagResource",
+            "invoicing:UpdateInvoiceUnit",
             "payments:CreateFinancingApplication",
             "payments:CreatePaymentInstrument",
             "payments:DeletePaymentInstrument",
@@ -40258,6 +40267,7 @@
             "aws-portal:*Billing",
             "consolidatedbilling:GetAccountBillingRole",
             "invoicing:GetInvoicePDF",
+            "invoicing:ListInvoiceUnits",
             "payments:GetPaymentInstrument",
             "payments:ListPaymentPreferences",
             "purchase-orders:AddPurchaseOrder",
@@ -43901,9 +43911,13 @@
             "cur:DescribeReportDefinitions",
             "freetier:GetFreeTierAlertPreference",
             "freetier:GetFreeTierUsage",
+            "invoicing:BatchGetInvoiceProfile",
             "invoicing:GetInvoiceEmailDeliveryPreferences",
             "invoicing:GetInvoicePDF",
+            "invoicing:GetInvoiceUnit",
             "invoicing:ListInvoiceSummaries",
+            "invoicing:ListInvoiceUnits",
+            "invoicing:ListTagsForResource",
             "payments:GetFinancingApplication",
             "payments:GetFinancingLine",
             "payments:GetFinancingLineWithdrawal",
@@ -58989,6 +59003,7 @@
       "Version": "2012-10-17",
       "Statement": [
         {
+          "Sid": "CreateMemoryDBTagsOnNetworkInterfaces",
           "Effect": "Allow",
           "Action": [
             "ec2:CreateTags"
@@ -59006,6 +59021,7 @@
           }
         },
         {
+          "Sid": "CreateNetworkInterfaces",
           "Effect": "Allow",
           "Action": [
             "ec2:CreateNetworkInterface"
@@ -59017,6 +59033,7 @@
           ]
         },
         {
+          "Sid": "DeleteMemoryDBTaggedNetworkInterfaces",
           "Effect": "Allow",
           "Action": [
             "ec2:DeleteNetworkInterface",
@@ -59030,6 +59047,7 @@
           }
         },
         {
+          "Sid": "DeleteNetworkInterfaces",
           "Effect": "Allow",
           "Action": [
             "ec2:DeleteNetworkInterface",
@@ -59038,6 +59056,7 @@
           "Resource": "arn:aws:ec2:*:*:security-group/*"
         },
         {
+          "Sid": "DescribeEC2Resources",
           "Effect": "Allow",
           "Action": [
             "ec2:DescribeSecurityGroups",
@@ -59049,6 +59068,7 @@
           "Resource": "*"
         },
         {
+          "Sid": "PutCloudWatchMetricData",
           "Effect": "Allow",
           "Action": [
             "cloudwatch:PutMetricData"
@@ -59059,6 +59079,14 @@
               "cloudwatch:namespace": "AWS/MemoryDB"
             }
           }
+        },
+        {
+          "Sid": "ReplicateMemoryDBMultiRegionClusterData",
+          "Effect": "Allow",
+          "Action": [
+            "memorydb:ReplicateMultiRegionClusterData"
+          ],
+          "Resource": "arn:aws:memorydb:*:*:cluster/*"
         }
       ]
     }
@@ -75236,6 +75264,101 @@
               "cloudwatch:namespace": "AWS/VpcLattice"
             }
           }
+        },
+        {
+          "Sid": "VpcLatticeDescribeActions",
+          "Effect": "Allow",
+          "Action": [
+            "ec2:DescribeSubnets",
+            "ec2:DescribeSecurityGroups",
+            "ec2:DescribeNetworkInterfaces",
+            "ec2:DescribeVpcs"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "VpcLatticeCreateNetworkInterfaceWithTag",
+          "Effect": "Allow",
+          "Action": [
+            "ec2:CreateNetworkInterface"
+          ],
+          "Resource": "arn:aws:ec2:*:*:network-interface/*",
+          "Condition": {
+            "StringEquals": {
+              "aws:RequestTag/VpcLatticeManaged": "true"
+            }
+          }
+        },
+        {
+          "Sid": "VpcLatticeCreateNetworkInterfaceWithSubnetAndSecurityGroup",
+          "Effect": "Allow",
+          "Action": [
+            "ec2:CreateNetworkInterface"
+          ],
+          "Resource": [
+            "arn:aws:ec2:*:*:subnet/*",
+            "arn:aws:ec2:*:*:security-group/*"
+          ]
+        },
+        {
+          "Sid": "VpcLatticeTagNetworkInterfaceActions",
+          "Effect": "Allow",
+          "Action": [
+            "ec2:CreateTags"
+          ],
+          "Resource": "arn:aws:ec2:*:*:network-interface/*",
+          "Condition": {
+            "StringEquals": {
+              "ec2:CreateAction": "CreateNetworkInterface"
+            }
+          }
+        },
+        {
+          "Sid": "VpcLatticeMutateNetworkInterfaceActions",
+          "Effect": "Allow",
+          "Action": [
+            "ec2:ModifyNetworkInterfaceAttribute",
+            "ec2:CreateNetworkInterfacePermission",
+            "ec2:DeleteNetworkInterface"
+          ],
+          "Resource": "arn:aws:ec2:*:*:network-interface/*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceTag/VpcLatticeManaged": "true"
+            }
+          }
+        },
+        {
+          "Sid": "VpcLatticeModifyNetworkInterfaceSecurityGroup",
+          "Effect": "Allow",
+          "Action": [
+            "ec2:ModifyNetworkInterfaceAttribute"
+          ],
+          "Resource": "arn:aws:ec2:*:*:security-group/*"
+        },
+        {
+          "Sid": "VpcLatticeModifyNetworkInterfaceActionsIpAddressActions",
+          "Effect": "Allow",
+          "Action": [
+            "ec2:AssignIpv6Addresses",
+            "ec2:UnassignIpv6Addresses",
+            "ec2:AssignPrivateIpAddresses",
+            "ec2:UnassignPrivateIpAddresses"
+          ],
+          "Resource": "arn:aws:ec2:*:*:network-interface/*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceTag/VpcLatticeManaged": "true"
+            }
+          }
+        },
+        {
+          "Sid": "VpcLatticeAssociateHostedZoneToVpc",
+          "Effect": "Allow",
+          "Action": [
+            "route53:AssociateVPCWithHostedZone"
+          ],
+          "Resource": "*"
         }
       ]
     }
@@ -77262,7 +77385,9 @@
             "logs:DescribeLogGroups",
             "logs:GetLogDelivery",
             "logs:ListLogDeliveries",
-            "s3:ListAllMyBuckets"
+            "s3:ListAllMyBuckets",
+            "rds:DescribeDBInstances",
+            "rds:DescribeDBClusters"
           ],
           "Resource": "*"
         }
@@ -77295,7 +77420,9 @@
             "s3:ListAllMyBuckets",
             "lambda:ListAliases",
             "lambda:ListFunctions",
-            "lambda:ListVersionsByFunction"
+            "lambda:ListVersionsByFunction",
+            "rds:DescribeDBInstances",
+            "rds:DescribeDBClusters"
           ],
           "Resource": "*"
         },
@@ -109593,6 +109720,769 @@
           "Resource": [
             "*"
           ]
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AWSSecurityIncidentResponseServiceRolePolicy",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "SecurityIncidentResponseOrganizationsPolicy",
+          "Effect": "Allow",
+          "Action": [
+            "organizations:ListAccounts",
+            "organizations:ListChildren"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "SecurityIncidentResponseCreateCasePolicyTagOnCreate",
+          "Effect": "Allow",
+          "Action": [
+            "security-ir:TagResource",
+            "security-ir:CreateCase"
+          ],
+          "Condition": {
+            "ForAllValues:StringEquals": {
+              "aws:TagKeys": [
+                "SecurityIncidentResponseManaged"
+              ]
+            },
+            "StringEquals": {
+              "aws:RequestTag/SecurityIncidentResponseManaged": "true",
+              "aws:ResourceTag/SecurityIncidentResponseManaged": "true"
+            }
+          },
+          "Resource": "arn:aws:security-ir:*:*:case/*"
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AWSSecurityIncidentResponseTriageServiceRolePolicy",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "events:DeleteRule",
+            "events:PutRule",
+            "events:PutTargets",
+            "events:RemoveTargets"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "events:ManagedBy": "triage.security-ir.amazonaws.com"
+            }
+          }
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "events:DescribeRule",
+            "events:ListTargetsByRule"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "guardduty:ArchiveFindings",
+            "guardduty:CreateFilter",
+            "guardduty:DescribeMalwareScans",
+            "guardduty:GetDetector",
+            "guardduty:GetFilter",
+            "guardduty:GetFindings",
+            "guardduty:ListDetectors",
+            "guardduty:StartMalwareScan",
+            "guardduty:UpdateFindingsFeedback"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "securityhub:BatchUpdateFindings",
+            "securityhub:DescribeHub",
+            "securityhub:GetEnabledStandards",
+            "securityhub:GetFindings",
+            "securityhub:ListEnabledProductsForImport",
+            "securityhub:UpdateFindings"
+          ],
+          "Resource": "arn:aws:securityhub:*:*:hub/default"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "security-ir:CreateCase",
+            "security-ir:TagResource"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "aws:RequestTag/SecurityIncidentResponseManaged": "true"
+            }
+          },
+          "Resource": "*"
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "CloudWatchOpenSearchDashboardsFullAccess",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "CloudWatchOpenSearchDashboardsIntegration",
+          "Effect": "Allow",
+          "Action": [
+            "logs:ListIntegrations",
+            "logs:GetIntegration",
+            "logs:DeleteIntegration",
+            "logs:PutIntegration",
+            "logs:DescribeLogGroups",
+            "opensearch:ApplicationAccessAll",
+            "iam:ListRoles",
+            "iam:ListUsers"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "CloudWatchLogsOpensearchReadAPIs",
+          "Effect": "Allow",
+          "Action": [
+            "aoss:BatchGetCollection",
+            "aoss:BatchGetLifecyclePolicy",
+            "es:ListApplications"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:CalledViaFirst": "logs.amazonaws.com"
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsOpensearchCreateServiceLinkedAccess",
+          "Effect": "Allow",
+          "Action": [
+            "iam:CreateServiceLinkedRole"
+          ],
+          "Resource": "arn:aws:iam::*:role/aws-service-role/opensearchservice.amazonaws.com/AWSServiceRoleForAmazonOpenSearchService",
+          "Condition": {
+            "StringEquals": {
+              "iam:AWSServiceName": "opensearchservice.amazonaws.com",
+              "aws:CalledViaFirst": "logs.amazonaws.com"
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsObservabilityCreateServiceLinkedAccess",
+          "Effect": "Allow",
+          "Action": [
+            "iam:CreateServiceLinkedRole"
+          ],
+          "Resource": "arn:aws:iam::*:role/aws-service-role/observability.aoss.amazonaws.com/AWSServiceRoleForAmazonOpenSearchServerless",
+          "Condition": {
+            "StringEquals": {
+              "iam:AWSServiceName": "observability.aoss.amazonaws.com",
+              "aws:CalledViaFirst": "logs.amazonaws.com"
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsCollectionRequestAccess",
+          "Effect": "Allow",
+          "Action": [
+            "aoss:CreateCollection"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:CalledViaFirst": "logs.amazonaws.com",
+              "aws:RequestTag/CloudWatchOpenSearchIntegration": [
+                "Dashboards"
+              ]
+            },
+            "ForAllValues:StringEquals": {
+              "aws:TagKeys": "CloudWatchOpenSearchIntegration"
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsApplicationRequestAccess",
+          "Effect": "Allow",
+          "Action": [
+            "es:CreateApplication"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:CalledViaFirst": "logs.amazonaws.com",
+              "aws:RequestTag/OpenSearchIntegration": [
+                "Dashboards"
+              ]
+            },
+            "ForAllValues:StringEquals": {
+              "aws:TagKeys": "OpenSearchIntegration"
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsCollectionResourceAccess",
+          "Effect": "Allow",
+          "Action": [
+            "aoss:DeleteCollection"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:CalledViaFirst": "logs.amazonaws.com",
+              "aws:ResourceTag/CloudWatchOpenSearchIntegration": [
+                "Dashboards"
+              ]
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsApplicationResourceAccess",
+          "Effect": "Allow",
+          "Action": [
+            "es:UpdateApplication",
+            "es:GetApplication"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:CalledViaFirst": "logs.amazonaws.com",
+              "aws:ResourceTag/OpenSearchIntegration": [
+                "Dashboards"
+              ]
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsCollectionPolicyAccess",
+          "Effect": "Allow",
+          "Action": [
+            "aoss:CreateSecurityPolicy",
+            "aoss:CreateAccessPolicy",
+            "aoss:DeleteAccessPolicy",
+            "aoss:DeleteSecurityPolicy",
+            "aoss:GetAccessPolicy",
+            "aoss:GetSecurityPolicy"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringLike": {
+              "aoss:collection": "cloudwatch-logs-*",
+              "aws:CalledViaFirst": "logs.amazonaws.com"
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsAPIAccessAll",
+          "Effect": "Allow",
+          "Action": [
+            "aoss:APIAccessAll"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringLike": {
+              "aoss:collection": "cloudwatch-logs-*"
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsIndexPolicyAccess",
+          "Effect": "Allow",
+          "Action": [
+            "aoss:CreateAccessPolicy",
+            "aoss:DeleteAccessPolicy",
+            "aoss:GetAccessPolicy",
+            "aoss:CreateLifecyclePolicy",
+            "aoss:DeleteLifecyclePolicy"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringLike": {
+              "aoss:index": "cloudwatch-logs-*",
+              "aws:CalledViaFirst": "logs.amazonaws.com"
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsDQSRequestQueryAccess",
+          "Effect": "Allow",
+          "Action": [
+            "es:AddDirectQueryDataSource"
+          ],
+          "Resource": "arn:aws:opensearch:*:*:datasource/cloudwatch_logs_*",
+          "Condition": {
+            "StringEquals": {
+              "aws:CalledViaFirst": "logs.amazonaws.com",
+              "aws:RequestTag/CloudWatchOpenSearchIntegration": [
+                "Dashboards"
+              ]
+            },
+            "ForAllValues:StringEquals": {
+              "aws:TagKeys": "CloudWatchOpenSearchIntegration"
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsStartDirectQueryAccess",
+          "Effect": "Allow",
+          "Action": [
+            "opensearch:StartDirectQuery",
+            "opensearch:GetDirectQuery"
+          ],
+          "Resource": "arn:aws:opensearch:*:*:datasource/cloudwatch_logs_*"
+        },
+        {
+          "Sid": "CloudWatchLogsDQSResourceQueryAccess",
+          "Effect": "Allow",
+          "Action": [
+            "es:GetDirectQueryDataSource",
+            "es:DeleteDirectQueryDataSource"
+          ],
+          "Resource": "arn:aws:opensearch:*:*:datasource/cloudwatch_logs_*",
+          "Condition": {
+            "StringEquals": {
+              "aws:CalledViaFirst": "logs.amazonaws.com",
+              "aws:ResourceTag/CloudWatchOpenSearchIntegration": [
+                "Dashboards"
+              ]
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsPassRoleAccess",
+          "Effect": "Allow",
+          "Action": [
+            "iam:PassRole"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringLike": {
+              "iam:PassedToService": "directquery.opensearchservice.amazonaws.com",
+              "aws:CalledViaFirst": "logs.amazonaws.com"
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsAossTagsAccess",
+          "Effect": "Allow",
+          "Action": [
+            "aoss:TagResource"
+          ],
+          "Resource": "arn:aws:aoss:*:*:collection/*",
+          "Condition": {
+            "StringEquals": {
+              "aws:CalledViaFirst": "logs.amazonaws.com",
+              "aws:ResourceTag/CloudWatchOpenSearchIntegration": [
+                "Dashboards"
+              ]
+            },
+            "ForAllValues:StringEquals": {
+              "aws:TagKeys": "CloudWatchOpenSearchIntegration"
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsEsApplicationTagsAccess",
+          "Effect": "Allow",
+          "Action": [
+            "es:AddTags"
+          ],
+          "Resource": "arn:aws:opensearch:*:*:application/*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceTag/OpenSearchIntegration": [
+                "Dashboards"
+              ],
+              "aws:CalledViaFirst": "logs.amazonaws.com"
+            },
+            "ForAllValues:StringEquals": {
+              "aws:TagKeys": "OpenSearchIntegration"
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsEsDataSourceTagsAccess",
+          "Effect": "Allow",
+          "Action": [
+            "es:AddTags"
+          ],
+          "Resource": "arn:aws:opensearch:*:*:datasource/*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceTag/CloudWatchOpenSearchIntegration": [
+                "Dashboards"
+              ],
+              "aws:CalledViaFirst": "logs.amazonaws.com"
+            },
+            "ForAllValues:StringEquals": {
+              "aws:TagKeys": "CloudWatchOpenSearchIntegration"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "CloudWatchOpenSearchDashboardAccess",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "CloudWatchOpenSearchDashboardsIntegration",
+          "Effect": "Allow",
+          "Action": [
+            "logs:ListIntegrations",
+            "logs:GetIntegration",
+            "logs:DescribeLogGroups",
+            "opensearch:ApplicationAccessAll",
+            "iam:ListRoles",
+            "iam:ListUsers"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "CloudWatchLogsOpensearchReadAPIs",
+          "Effect": "Allow",
+          "Action": [
+            "aoss:BatchGetCollection",
+            "aoss:BatchGetLifecyclePolicy",
+            "es:ListApplications"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:CalledViaFirst": "logs.amazonaws.com"
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsAPIAccessAll",
+          "Effect": "Allow",
+          "Action": [
+            "aoss:APIAccessAll"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringLike": {
+              "aoss:collection": "cloudwatch-logs-*"
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsDQSCollectionPolicyAccess",
+          "Effect": "Allow",
+          "Action": [
+            "aoss:GetAccessPolicy",
+            "aoss:GetSecurityPolicy"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringLike": {
+              "aws:CalledViaFirst": "logs.amazonaws.com",
+              "aoss:collection": "cloudwatch-logs-*"
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsApplicationResourceAccess",
+          "Effect": "Allow",
+          "Action": [
+            "es:GetApplication"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:CalledViaFirst": "logs.amazonaws.com",
+              "aws:ResourceTag/OpenSearchIntegration": [
+                "Dashboards"
+              ]
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsDQSResourceQueryAccess",
+          "Effect": "Allow",
+          "Action": [
+            "es:GetDirectQueryDataSource"
+          ],
+          "Resource": "arn:aws:opensearch:*:*:datasource/cloudwatch_logs_*",
+          "Condition": {
+            "StringEquals": {
+              "aws:CalledViaFirst": "logs.amazonaws.com",
+              "aws:ResourceTag/CloudWatchOpenSearchIntegration": [
+                "Dashboards"
+              ]
+            }
+          }
+        },
+        {
+          "Sid": "CloudWatchLogsDirectQueryStatusAccess",
+          "Effect": "Allow",
+          "Action": [
+            "opensearch:GetDirectQuery"
+          ],
+          "Resource": "arn:aws:opensearch:*:*:datasource/cloudwatch_logs_*"
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "CloudWatchNetworkFlowMonitorServiceRolePolicy",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "cloudwatch:PutMetricData"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "cloudwatch:namespace": "AWS/NetworkFlowMonitor"
+            }
+          }
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "organizations:ListDelegatedAdministrators",
+            "organizations:DescribeOrganization",
+            "organizations:ListAWSServiceAccessForOrganization",
+            "organizations:DescribeAccount",
+            "organizations:ListAccounts"
+          ],
+          "Resource": [
+            "arn:aws:organizations::*:account/*",
+            "arn:aws:organizations::*:organization/*"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "CloudWatchNetworkFlowMonitorAgentPublishPolicy",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "networkflowmonitor:Publish"
+          ],
+          "Resource": "*"
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "CloudWatchNetworkFlowMonitorTopologyServiceRolePolicy",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "ec2:DescribeTransitGatewayAttachments",
+            "ec2:DescribeTransitGatewayConnects",
+            "ec2:DescribeTransitGatewayPeeringAttachments",
+            "ec2:DescribeTransitGatewayRouteTables",
+            "ec2:DescribeTransitGateways",
+            "ec2:DescribeTransitGatewayVpcAttachments",
+            "ec2:DescribeVpnConnections",
+            "ec2:DescribeCustomerGateways",
+            "ec2:GetTransitGatewayRouteTableAssociations",
+            "ec2:GetTransitGatewayRouteTablePropagations",
+            "ec2:SearchTransitGatewayRoutes"
+          ],
+          "Resource": "*"
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AWSSecurityIncidentResponseReadOnlyAccess",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "SecurityIRReadAccess",
+          "Effect": "Allow",
+          "Action": [
+            "security-ir:BatchGetMemberAccountDetails",
+            "security-ir:GetMembership",
+            "security-ir:ListMemberships",
+            "security-ir:GetCase",
+            "security-ir:ListCases",
+            "security-ir:GetCaseAttachmentDownloadUrl",
+            "security-ir:ListComments",
+            "security-ir:ListCaseEdits",
+            "security-ir:ListTagsForResource"
+          ],
+          "Resource": "*"
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AWSSecurityIncidentResponseCaseFullAccess",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "SecurityIRCaseReadAccess",
+          "Effect": "Allow",
+          "Action": [
+            "security-ir:GetCase",
+            "security-ir:ListCases",
+            "security-ir:GetCaseAttachmentDownloadUrl",
+            "security-ir:ListComments",
+            "security-ir:ListCaseEdits"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "SecurityIRCaseTagReadAccess",
+          "Effect": "Allow",
+          "Action": [
+            "security-ir:ListTagsForResource"
+          ],
+          "Resource": "arn:aws:security-ir:*:*:case/*"
+        },
+        {
+          "Sid": "SecurityIRCaseWriteAccess",
+          "Effect": "Allow",
+          "Action": [
+            "security-ir:CreateCase",
+            "security-ir:UpdateCase",
+            "security-ir:CloseCase",
+            "security-ir:UpdateCaseStatus",
+            "security-ir:UpdateResolverType",
+            "security-ir:GetCaseAttachmentUploadUrl",
+            "security-ir:CreateCaseComment",
+            "security-ir:UpdateCaseComment"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "Bool": {
+              "aws:MultiFactorAuthPresent": "true"
+            }
+          }
+        },
+        {
+          "Sid": "SecurityIRCaseTagWriteAccess",
+          "Effect": "Allow",
+          "Action": [
+            "security-ir:TagResource",
+            "security-ir:UntagResource"
+          ],
+          "Resource": "arn:aws:security-ir:*:*:case/*",
+          "Condition": {
+            "Bool": {
+              "aws:MultiFactorAuthPresent": "true"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AWSSecurityIncidentResponseFullAccess",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "SecurityIRReadAccess",
+          "Effect": "Allow",
+          "Action": [
+            "security-ir:BatchGetMemberAccountDetails",
+            "security-ir:GetMembership",
+            "security-ir:ListMemberships",
+            "security-ir:GetCase",
+            "security-ir:ListCases",
+            "security-ir:GetCaseAttachmentDownloadUrl",
+            "security-ir:ListComments",
+            "security-ir:ListCaseEdits",
+            "security-ir:ListTagsForResource"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "SecurityIRWriteAccess",
+          "Effect": "Allow",
+          "Action": [
+            "security-ir:CreateMembership",
+            "security-ir:UpdateMembership",
+            "security-ir:CancelMembership",
+            "security-ir:CreateCase",
+            "security-ir:UpdateCase",
+            "security-ir:CloseCase",
+            "security-ir:UpdateCaseStatus",
+            "security-ir:UpdateResolverType",
+            "security-ir:GetCaseAttachmentUploadUrl",
+            "security-ir:CreateCaseComment",
+            "security-ir:UpdateCaseComment",
+            "security-ir:TagResource",
+            "security-ir:UntagResource"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "Bool": {
+              "aws:MultiFactorAuthPresent": "true"
+            }
+          }
+        },
+        {
+          "Sid": "AllowCreationOfServiceLinkedRoleForSecurityIncidentResponse",
+          "Effect": "Allow",
+          "Action": [
+            "iam:CreateServiceLinkedRole"
+          ],
+          "Resource": [
+            "arn:aws:iam::*:role/aws-service-role/security-ir.amazonaws.com/AWSServiceRoleForSecurityIncidentResponse"
+          ],
+          "Condition": {
+            "StringLike": {
+              "iam:AWSServiceName": "security-ir.amazonaws.com"
+            }
+          }
+        },
+        {
+          "Sid": "AllowCreationOfServiceLinkedRoleForSecurityIncidentResponseTriage",
+          "Effect": "Allow",
+          "Action": [
+            "iam:CreateServiceLinkedRole"
+          ],
+          "Resource": [
+            "arn:aws:iam::*:role/aws-service-role/triage.security-ir.amazonaws.com/AWSServiceRoleForSecurityIncidentResponse_Triage"
+          ],
+          "Condition": {
+            "StringLike": {
+              "iam:AWSServiceName": "triage.security-ir.amazonaws.com"
+            }
+          }
+        },
+        {
+          "Sid": "OrganizationsPolicies",
+          "Effect": "Allow",
+          "Action": [
+            "organizations:DescribeOrganization",
+            "organizations:ListDelegatedAdministrators"
+          ],
+          "Resource": "*"
         }
       ]
     }
