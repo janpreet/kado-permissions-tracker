@@ -33687,6 +33687,11 @@
             "lakeformation:*",
             "cloudtrail:DescribeTrails",
             "cloudtrail:LookupEvents",
+            "glue:CreateCatalog",
+            "glue:UpdateCatalog",
+            "glue:DeleteCatalog",
+            "glue:GetCatalog",
+            "glue:GetCatalogs",
             "glue:GetDatabase",
             "glue:GetDatabases",
             "glue:CreateDatabase",
@@ -84892,6 +84897,7 @@
             "datazone:GetEnvironmentAction",
             "datazone:GetEnvironmentActionLink",
             "datazone:GetEnvironmentBlueprint",
+            "datazone:GetEnvironmentBlueprintConfiguration",
             "datazone:GetEnvironmentCredentials",
             "datazone:GetEnvironmentProfile",
             "datazone:GetFormType",
@@ -111743,6 +111749,197 @@
             "ssm:GetOpsSummary"
           ],
           "Resource": "*"
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AuroraDsqlServiceLinkedRolePolicy",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "cloudwatch:PutMetricData"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "cloudwatch:namespace": "AWS/AuroraDSQL",
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AmazonS3TablesReadOnlyAccess",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3tables:Get*",
+            "s3tables:List*"
+          ],
+          "Resource": "*"
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AmazonAuroraDSQLReadOnlyAccess",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "DsqlReadOnlyPermissions",
+          "Effect": "Allow",
+          "Action": [
+            "dsql:GetCluster",
+            "dsql:ListClusters",
+            "dsql:ListTagsForResource"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "RelatedServicesPermissions",
+          "Effect": "Allow",
+          "Action": [
+            "cloudwatch:GetMetricData"
+          ],
+          "Resource": "*"
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AmazonS3TablesFullAccess",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3tables:*"
+          ],
+          "Resource": "*"
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "QBusinessQuicksightPluginPolicy",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "QBusinessToQuickSightPredictQAResultsInvocation",
+          "Effect": "Allow",
+          "Action": [
+            "quicksight:PredictQAResults"
+          ],
+          "Resource": [
+            "arn:aws:quicksight:*:*:topic/*",
+            "arn:aws:quicksight:*:*:dashboard/*"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AmazonAuroraDSQLConsoleFullAccess",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "DsqlAllPermissions",
+          "Effect": "Allow",
+          "Action": [
+            "dsql:CreateCluster",
+            "dsql:GetCluster",
+            "dsql:UpdateCluster",
+            "dsql:DeleteCluster",
+            "dsql:ListClusters",
+            "dsql:CreateMultiRegionClusters",
+            "dsql:DeleteMultiRegionClusters",
+            "dsql:TagResource",
+            "dsql:UntagResource",
+            "dsql:ListTagsForResource",
+            "dsql:DbConnectAdmin",
+            "dsql:DbConnect"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "DsqlConsolePermissions",
+          "Effect": "Allow",
+          "Action": [
+            "tag:GetTagKeys",
+            "tag:GetTagValues",
+            "cloudwatch:GetMetricData"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "CreateDsqlServiceLinkedRole",
+          "Effect": "Allow",
+          "Action": "iam:CreateServiceLinkedRole",
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "iam:AWSServiceName": "dsql.amazonaws.com"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AmazonAuroraDSQLFullAccess",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "DsqlAllPermissions",
+          "Effect": "Allow",
+          "Action": [
+            "dsql:CreateCluster",
+            "dsql:GetCluster",
+            "dsql:UpdateCluster",
+            "dsql:DeleteCluster",
+            "dsql:ListClusters",
+            "dsql:CreateMultiRegionClusters",
+            "dsql:DeleteMultiRegionClusters",
+            "dsql:TagResource",
+            "dsql:UntagResource",
+            "dsql:ListTagsForResource",
+            "dsql:DbConnectAdmin",
+            "dsql:DbConnect"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "RelatedServicesPermissions",
+          "Effect": "Allow",
+          "Action": [
+            "cloudwatch:GetMetricData"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Sid": "CreateDsqlServiceLinkedRole",
+          "Effect": "Allow",
+          "Action": "iam:CreateServiceLinkedRole",
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "iam:AWSServiceName": "dsql.amazonaws.com"
+            }
+          }
         }
       ]
     }
