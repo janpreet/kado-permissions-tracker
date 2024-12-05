@@ -17590,7 +17590,10 @@
             "arn:aws:sagemaker:*:*:user-profile/*",
             "arn:aws:sagemaker:*:*:app/*",
             "arn:aws:sagemaker:*:*:space/*",
-            "arn:aws:sagemaker:*:*:flow-definition/*"
+            "arn:aws:sagemaker:*:*:partner-app/*",
+            "arn:aws:sagemaker:*:*:flow-definition/*",
+            "arn:aws:sagemaker:*:*:training-plan/*",
+            "arn:aws:sagemaker:*:*:reserved-capacity/*"
           ]
         },
         {
@@ -17616,6 +17619,20 @@
           ],
           "Resource": [
             "arn:aws:sagemaker:*:*:app/*"
+          ]
+        },
+        {
+          "Sid": "AllowUseOfTrainingPlanResources",
+          "Effect": "Allow",
+          "Action": [
+            "sagemaker:CreateTrainingJob",
+            "sagemaker:CreateCluster",
+            "sagemaker:UpdateCluster",
+            "sagemaker:DescribeTrainingPlan"
+          ],
+          "Resource": [
+            "arn:aws:sagemaker:*:*:training-plan/*",
+            "arn:aws:sagemaker:*:*:reserved-capacity/*"
           ]
         },
         {
@@ -88178,6 +88195,154 @@
           "Resource": "*"
         },
         {
+          "Sid": "MarketplaceModelEndpointMutatingAPIs",
+          "Effect": "Allow",
+          "Action": [
+            "sagemaker:CreateEndpoint",
+            "sagemaker:CreateEndpointConfig",
+            "sagemaker:CreateModel",
+            "sagemaker:DeleteEndpoint",
+            "sagemaker:UpdateEndpoint"
+          ],
+          "Resource": [
+            "arn:aws:sagemaker:*:*:endpoint/*",
+            "arn:aws:sagemaker:*:*:endpoint-config/*",
+            "arn:aws:sagemaker:*:*:model/*"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "aws:CalledViaLast": "bedrock.amazonaws.com",
+              "aws:ResourceTag/sagemaker-sdk:bedrock": "compatible"
+            }
+          }
+        },
+        {
+          "Sid": "MarketplaceModelEndpointAddTagsOperations",
+          "Effect": "Allow",
+          "Action": [
+            "sagemaker:AddTags"
+          ],
+          "Resource": [
+            "arn:aws:sagemaker:*:*:endpoint/*",
+            "arn:aws:sagemaker:*:*:endpoint-config/*",
+            "arn:aws:sagemaker:*:*:model/*"
+          ],
+          "Condition": {
+            "ForAllValues:StringEquals": {
+              "aws:TagKeys": [
+                "sagemaker-sdk:bedrock",
+                "bedrock:marketplace-registration-status",
+                "sagemaker-studio:hub-content-arn"
+              ]
+            },
+            "StringLike": {
+              "aws:RequestTag/sagemaker-sdk:bedrock": "compatible",
+              "aws:RequestTag/bedrock:marketplace-registration-status": "registered",
+              "aws:RequestTag/sagemaker-studio:hub-content-arn": "arn:aws:sagemaker:*:aws:hub-content/SageMakerPublicHub/Model/*"
+            }
+          }
+        },
+        {
+          "Sid": "MarketplaceModelEndpointDeleteTagsOperations",
+          "Effect": "Allow",
+          "Action": [
+            "sagemaker:DeleteTags"
+          ],
+          "Resource": [
+            "arn:aws:sagemaker:*:*:endpoint/*",
+            "arn:aws:sagemaker:*:*:endpoint-config/*",
+            "arn:aws:sagemaker:*:*:model/*"
+          ],
+          "Condition": {
+            "ForAllValues:StringEquals": {
+              "aws:TagKeys": [
+                "sagemaker-sdk:bedrock",
+                "bedrock:marketplace-registration-status",
+                "sagemaker-studio:hub-content-arn"
+              ]
+            },
+            "StringLike": {
+              "aws:ResourceTag/sagemaker-sdk:bedrock": "compatible",
+              "aws:ResourceTag/bedrock:marketplace-registration-status": "registered",
+              "aws:ResourceTag/sagemaker-studio:hub-content-arn": "arn:aws:sagemaker:*:aws:hub-content/SageMakerPublicHub/Model/*"
+            }
+          }
+        },
+        {
+          "Sid": "MarketplaceModelEndpointNonMutatingAPIs",
+          "Effect": "Allow",
+          "Action": [
+            "sagemaker:DescribeEndpoint",
+            "sagemaker:DescribeEndpointConfig",
+            "sagemaker:DescribeModel",
+            "sagemaker:ListTags"
+          ],
+          "Resource": [
+            "arn:aws:sagemaker:*:*:endpoint/*",
+            "arn:aws:sagemaker:*:*:endpoint-config/*",
+            "arn:aws:sagemaker:*:*:model/*"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "aws:CalledViaLast": "bedrock.amazonaws.com"
+            }
+          }
+        },
+        {
+          "Sid": "MarketplaceModelEndpointInvokingOperations",
+          "Effect": "Allow",
+          "Action": [
+            "sagemaker:InvokeEndpoint",
+            "sagemaker:InvokeEndpointWithResponseStream"
+          ],
+          "Resource": [
+            "arn:aws:sagemaker:*:*:endpoint/*"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "aws:CalledViaLast": "bedrock.amazonaws.com",
+              "aws:ResourceTag/sagemaker-sdk:bedrock": "compatible"
+            }
+          }
+        },
+        {
+          "Sid": "DiscoveringMarketplaceModel",
+          "Effect": "Allow",
+          "Action": [
+            "sagemaker:DescribeHubContent"
+          ],
+          "Resource": [
+            "arn:aws:sagemaker:*:aws:hub-content/SageMakerPublicHub/Model/*",
+            "arn:aws:sagemaker:*:aws:hub/SageMakerPublicHub"
+          ]
+        },
+        {
+          "Sid": "AllowMarketplaceModelsListing",
+          "Effect": "Allow",
+          "Action": [
+            "sagemaker:ListHubContents"
+          ],
+          "Resource": "arn:aws:sagemaker:*:aws:hub/SageMakerPublicHub"
+        },
+        {
+          "Sid": "PassRoleToSageMaker",
+          "Effect": "Allow",
+          "Action": [
+            "iam:PassRole"
+          ],
+          "Resource": [
+            "arn:aws:iam::*:role/*SageMaker*ForBedrock*"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "iam:PassedToService": [
+                "sagemaker.amazonaws.com",
+                "bedrock.amazonaws.com"
+              ]
+            }
+          }
+        },
+        {
           "Sid": "PassRoleToBedrock",
           "Effect": "Allow",
           "Action": [
@@ -88204,31 +88369,51 @@
           "Sid": "AmazonBedrockReadOnly",
           "Effect": "Allow",
           "Action": [
-            "bedrock:GetFoundationModel",
-            "bedrock:ListFoundationModels",
-            "bedrock:GetModelInvocationLoggingConfiguration",
-            "bedrock:GetProvisionedModelThroughput",
-            "bedrock:ListProvisionedModelThroughputs",
-            "bedrock:GetModelCustomizationJob",
-            "bedrock:ListModelCustomizationJobs",
-            "bedrock:ListCustomModels",
-            "bedrock:GetCustomModel",
-            "bedrock:ListTagsForResource",
-            "bedrock:GetFoundationModelAvailability",
-            "bedrock:GetGuardrail",
-            "bedrock:ListGuardrails",
-            "bedrock:GetEvaluationJob",
-            "bedrock:ListEvaluationJobs",
-            "bedrock:GetModelInvocationJob",
-            "bedrock:ListModelInvocationJobs",
-            "bedrock:GetInferenceProfile",
-            "bedrock:ListInferenceProfiles",
-            "bedrock:ListImportedModels",
-            "bedrock:GetImportedModel",
-            "bedrock:ListModelImportJobs",
-            "bedrock:GetModelImportJob"
+            "bedrock:Get*",
+            "bedrock:List*"
           ],
           "Resource": "*"
+        },
+        {
+          "Sid": "MarketplaceModelEndpointNonMutatingAPIs",
+          "Effect": "Allow",
+          "Action": [
+            "sagemaker:DescribeEndpoint",
+            "sagemaker:DescribeEndpointConfig",
+            "sagemaker:DescribeModel",
+            "sagemaker:DescribeInferenceComponent",
+            "sagemaker:ListEndpoints",
+            "sagemaker:ListTags"
+          ],
+          "Resource": [
+            "arn:aws:sagemaker:*:*:endpoint/*",
+            "arn:aws:sagemaker:*:*:endpoint-config/*",
+            "arn:aws:sagemaker:*:*:model/*"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "aws:CalledViaLast": "bedrock.amazonaws.com"
+            }
+          }
+        },
+        {
+          "Sid": "DiscoveringMarketplaceModel",
+          "Effect": "Allow",
+          "Action": [
+            "sagemaker:DescribeHubContent"
+          ],
+          "Resource": [
+            "arn:aws:sagemaker:*:aws:hub-content/SageMakerPublicHub/Model/*",
+            "arn:aws:sagemaker:*:aws:hub/SageMakerPublicHub"
+          ]
+        },
+        {
+          "Sid": "AllowMarketplaceModelsListing",
+          "Effect": "Allow",
+          "Action": [
+            "sagemaker:ListHubContents"
+          ],
+          "Resource": "arn:aws:sagemaker:*:aws:hub/SageMakerPublicHub"
         }
       ]
     }
@@ -97764,17 +97949,34 @@
             "partnercentral:AcceptEngagementInvitation",
             "partnercentral:AssignOpportunity",
             "partnercentral:AssociateOpportunity",
+            "partnercentral:CreateEngagement",
+            "partnercentral:CreateEngagementInvitation",
             "partnercentral:CreateOpportunity",
+            "partnercentral:CreateResourceSnapshot",
+            "partnercentral:CreateResourceSnapshotJob",
+            "partnercentral:DeleteResourceSnapshotJob",
             "partnercentral:DisassociateOpportunity",
             "partnercentral:GetAwsOpportunitySummary",
+            "partnercentral:GetEngagement",
             "partnercentral:GetEngagementInvitation",
             "partnercentral:GetOpportunity",
+            "partnercentral:GetResourceSnapshot",
+            "partnercentral:GetResourceSnapshotJob",
+            "partnercentral:ListEngagementByAcceptingInvitationTasks",
+            "partnercentral:ListEngagementFromOpportunityTasks",
             "partnercentral:ListEngagementInvitations",
+            "partnercentral:ListEngagementMembers",
+            "partnercentral:ListEngagementResourceAssociations",
+            "partnercentral:ListEngagements",
             "partnercentral:ListOpportunities",
+            "partnercentral:ListResourceSnapshotJobs",
+            "partnercentral:ListResourceSnapshots",
             "partnercentral:ListSolutions",
             "partnercentral:RejectEngagementInvitation",
             "partnercentral:StartEngagementByAcceptingInvitationTask",
             "partnercentral:StartEngagementFromOpportunityTask",
+            "partnercentral:StartResourceSnapshotJob",
+            "partnercentral:StopResourceSnapshotJob",
             "partnercentral:SubmitOpportunity",
             "partnercentral:UpdateOpportunity"
           ],
@@ -111938,6 +112140,96 @@
           "Condition": {
             "StringEquals": {
               "iam:AWSServiceName": "dsql.amazonaws.com"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AmazonSageMakerTrainingPlanCreateAccess",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "CreateTrainingPlanPermissions",
+          "Effect": "Allow",
+          "Action": [
+            "sagemaker:CreateTrainingPlan",
+            "sagemaker:CreateReservedCapacity"
+          ],
+          "Resource": [
+            "arn:aws:sagemaker:*:*:training-plan/*",
+            "arn:aws:sagemaker:*:*:reserved-capacity/*"
+          ]
+        },
+        {
+          "Sid": "AggTagsToTrainingPlanPermissions",
+          "Effect": "Allow",
+          "Action": [
+            "sagemaker:AddTags"
+          ],
+          "Resource": [
+            "arn:aws:sagemaker:*:*:training-plan/*",
+            "arn:aws:sagemaker:*:*:reserved-capacity/*"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "sagemaker:TaggingAction": [
+                "CreateTrainingPlan",
+                "CreateReservedCapacity"
+              ]
+            }
+          }
+        },
+        {
+          "Sid": "DescribeTrainingPlanPermissions",
+          "Effect": "Allow",
+          "Action": "sagemaker:DescribeTrainingPlan",
+          "Resource": [
+            "arn:aws:sagemaker:*:*:training-plan/*"
+          ]
+        },
+        {
+          "Sid": "NonResourceLevelTrainingPlanPermissions",
+          "Effect": "Allow",
+          "Action": [
+            "sagemaker:SearchTrainingPlanOfferings",
+            "sagemaker:ListTrainingPlans"
+          ],
+          "Resource": "*"
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AmazonSageMakerCanvasSMDataScienceAssistantAccess",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "SageMakerDataScienceAssistantAccess",
+          "Effect": "Allow",
+          "Action": [
+            "sagemaker-data-science-assistant:SendConversation"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        },
+        {
+          "Sid": "AmazonQDeveloperAccess",
+          "Effect": "Allow",
+          "Action": [
+            "q:SendMessage"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
             }
           }
         }
