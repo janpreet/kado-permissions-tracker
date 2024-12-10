@@ -12894,6 +12894,13 @@
     "Permissions": [
       {
         "actions": [
+          "Microsoft.Authorization/*/read",
+          "Microsoft.Insights/alertRules/*",
+          "Microsoft.Resources/deployments/*",
+          "Microsoft.Resources/subscriptions/resourceGroups/read",
+          "Microsoft.Resources/subscriptions/resourceGroups/write",
+          "Microsoft.Resources/subscriptions/operationresults/read",
+          "Microsoft.Resources/subscriptions/read",
           "Microsoft.ContainerService/managedClusters/read",
           "Microsoft.ContainerService/managedClusters/trustedAccessRoleBindings/delete",
           "Microsoft.ContainerService/managedClusters/trustedAccessRoleBindings/read",
@@ -13524,6 +13531,22 @@
           "Microsoft.ContainerRegistry/registries/repositories/metadata/delete",
           "Microsoft.ContainerRegistry/registries/repositories/content/delete"
         ],
+        "not_data_actions": []
+      }
+    ]
+  },
+  {
+    "RoleName": "Locks Contributor",
+    "Description": "Can Manage Locks Operations.",
+    "Permissions": [
+      {
+        "actions": [
+          "Microsoft.Authorization/locks/read",
+          "Microsoft.Authorization/locks/write",
+          "Microsoft.Authorization/locks/delete"
+        ],
+        "not_actions": [],
+        "data_actions": [],
         "not_data_actions": []
       }
     ]
@@ -15492,6 +15515,12 @@
     "Permissions": [
       {
         "actions": [
+          "Microsoft.Authorization/*/read",
+          "Microsoft.Insights/alertRules/*",
+          "Microsoft.Resources/deployments/*",
+          "Microsoft.Resources/subscriptions/resourceGroups/read",
+          "Microsoft.Resources/subscriptions/operationresults/read",
+          "Microsoft.Resources/subscriptions/read",
           "Microsoft.OperationalInsights/workspaces/write",
           "Microsoft.OperationalInsights/workspaces/read",
           "Microsoft.OperationalInsights/workspaces/listKeys/action",
@@ -15563,6 +15592,34 @@
           "Microsoft.Communication/EmailServices/Domains/InitiateVerification/action",
           "Microsoft.Communication/EmailServices/Domains/CancelVerification/action",
           "Microsoft.Communication/EmailServices/Domains/*"
+        ],
+        "not_actions": [],
+        "data_actions": [],
+        "not_data_actions": []
+      }
+    ]
+  },
+  {
+    "RoleName": "Oracle.Database Autonomous Database Administrator",
+    "Description": "Grants full access to manage all Autonomous Database resources",
+    "Permissions": [
+      {
+        "actions": [
+          "Oracle.Database/autonomousDatabases/*/read",
+          "Oracle.Database/autonomousDatabases/*/write",
+          "Oracle.Database/autonomousDatabases/*/delete",
+          "Oracle.Database/autonomousDatabases/*/action",
+          "Oracle.Database/Locations/*/read",
+          "Oracle.Database/Locations/*/write",
+          "Oracle.Database/Operations/read",
+          "Oracle.Database/oracleSubscriptions/*/read",
+          "Oracle.Database/oracleSubscriptions/*/action",
+          "Microsoft.Resources/subscriptions/resourceGroups/read",
+          "Microsoft.Resources/deployments/*",
+          "Microsoft.Network/virtualNetworks/read",
+          "Microsoft.Network/virtualNetworks/subnets/read",
+          "Microsoft.Network/virtualNetworks/subnets/write",
+          "Microsoft.Network/locations/operations/read"
         ],
         "not_actions": [],
         "data_actions": [],
