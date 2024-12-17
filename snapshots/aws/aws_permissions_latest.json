@@ -6824,8 +6824,8 @@
           ],
           "Resource": "*",
           "Condition": {
-            "StringLike": {
-              "codestar-notifications:NotificationsForResource": "arn:aws:codedeploy:*"
+            "ArnLike": {
+              "codestar-notifications:NotificationsForResource": "arn:aws:codedeploy:*:*:application:*"
             }
           }
         },
@@ -6896,8 +6896,8 @@
           ],
           "Resource": "*",
           "Condition": {
-            "StringLike": {
-              "codestar-notifications:NotificationsForResource": "arn:aws:codedeploy:*"
+            "ArnLike": {
+              "codestar-notifications:NotificationsForResource": "arn:aws:codedeploy:*:*:application:*"
             }
           }
         },
@@ -6953,8 +6953,8 @@
           ],
           "Resource": "*",
           "Condition": {
-            "StringLike": {
-              "codestar-notifications:NotificationsForResource": "arn:aws:codedeploy:*"
+            "ArnLike": {
+              "codestar-notifications:NotificationsForResource": "arn:aws:codedeploy:*:*:application:*"
             }
           }
         },
@@ -12361,8 +12361,8 @@
           ],
           "Resource": "*",
           "Condition": {
-            "StringLike": {
-              "codestar-notifications:NotificationsForResource": "arn:aws:codebuild:*"
+            "ArnLike": {
+              "codestar-notifications:NotificationsForResource": "arn:aws:codebuild:*:*:project/*"
             }
           }
         },
@@ -12443,8 +12443,8 @@
           ],
           "Resource": "*",
           "Condition": {
-            "StringLike": {
-              "codestar-notifications:NotificationsForResource": "arn:aws:codebuild:*"
+            "ArnLike": {
+              "codestar-notifications:NotificationsForResource": "arn:aws:codebuild:*:*:project/*"
             }
           }
         },
@@ -12560,8 +12560,8 @@
           ],
           "Resource": "*",
           "Condition": {
-            "StringLike": {
-              "codestar-notifications:NotificationsForResource": "arn:aws:codebuild:*"
+            "ArnLike": {
+              "codestar-notifications:NotificationsForResource": "arn:aws:codebuild:*:*:project/*"
             }
           }
         },
@@ -24951,7 +24951,8 @@
             "ec2:ModifySnapshotAttribute",
             "ec2:DescribeSnapshotAttribute",
             "ec2:DescribeSnapshotTierStatus",
-            "ec2:ModifySnapshotTier"
+            "ec2:ModifySnapshotTier",
+            "ec2:DescribeAvailabilityZones"
           ],
           "Resource": "*"
         },
@@ -81219,9 +81220,11 @@
             "elasticloadbalancing:DescribeLoadBalancers",
             "elasticloadbalancing:DescribeTargetGroups",
             "elasticloadbalancing:DescribeTargetHealth",
+            "fis:GetExperiment",
             "fis:GetExperimentTemplate",
             "fis:ListExperimentTemplates",
             "fis:ListExperiments",
+            "fis:ListExperimentResolvedTargets",
             "fsx:DescribeFileSystems",
             "lambda:GetFunctionConcurrency",
             "lambda:GetFunctionConfiguration",
