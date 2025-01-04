@@ -12054,6 +12054,8 @@
           "Action": [
             "glue:CreateDatabase",
             "glue:DeleteDatabase",
+            "glue:GetCatalog",
+            "glue:GetCatalogs",
             "glue:GetDatabase",
             "glue:GetDatabases",
             "glue:UpdateDatabase",
@@ -13033,6 +13035,8 @@
           "Action": [
             "glue:CreateDatabase",
             "glue:DeleteDatabase",
+            "glue:GetCatalog",
+            "glue:GetCatalogs",
             "glue:GetDatabase",
             "glue:GetDatabases",
             "glue:UpdateDatabase",
@@ -38245,7 +38249,8 @@
           "Sid": "CloudWatchAccess",
           "Effect": "Allow",
           "Action": [
-            "cloudwatch:GetMetricData"
+            "cloudwatch:GetMetricData",
+            "cloudwatch:DescribeAlarms"
           ],
           "Resource": "*"
         },
@@ -38254,7 +38259,9 @@
           "Effect": "Allow",
           "Action": [
             "autoscaling:DescribeAutoScalingInstances",
-            "autoscaling:DescribeAutoScalingGroups"
+            "autoscaling:DescribeAutoScalingGroups",
+            "autoscaling:DescribePolicies",
+            "autoscaling:DescribeScheduledActions"
           ],
           "Resource": "*"
         },
@@ -101577,8 +101584,12 @@
                 "emr-serverless.*.amazonaws.com",
                 "s3.*.amazonaws.com",
                 "redshift.*.amazonaws.com",
+                "redshift-serverless.*.amazonaws.com",
                 "bedrock.*.amazonaws.com",
-                "secretsmanager.*.amazonaws.com"
+                "secretsmanager.*.amazonaws.com",
+                "ec2.*.amazonaws.com",
+                "codecommit.*.amazonaws.com",
+                "glue.*.amazonaws.com"
               ]
             },
             "StringEquals": {
@@ -101586,6 +101597,17 @@
             },
             "Null": {
               "kms:EncryptionContextKeys": "false"
+            }
+          }
+        },
+        {
+          "Sid": "AllowGenerateDataKeyForEmrEbsEncryption",
+          "Effect": "Allow",
+          "Action": "kms:GenerateDataKey",
+          "Resource": "arn:aws:kms:*:*:key/${aws:PrincipalTag/KmsKeyId}",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
             }
           }
         },
@@ -101607,7 +101629,8 @@
                 "s3.*.amazonaws.com",
                 "redshift.*.amazonaws.com",
                 "bedrock.*.amazonaws.com",
-                "secretsmanager.*.amazonaws.com"
+                "secretsmanager.*.amazonaws.com",
+                "codecommit.*.amazonaws.com"
               ]
             },
             "StringEquals": {
@@ -102457,6 +102480,7 @@
             "sagemaker:DescribePipelineDefinitionForExecution",
             "sagemaker:DescribeHyperParameterTuningJob",
             "sagemaker:DescribeAutoMLJob",
+            "sagemaker:DescribeAutoMLJobV2",
             "sagemaker:DescribeProcessingJob",
             "sagemaker:DescribeTrainingJob",
             "sagemaker:DescribeAction",
@@ -103781,6 +103805,7 @@
             "sagemaker:DescribeApp",
             "sagemaker:DescribeArtifact",
             "sagemaker:DescribeAutoMLJob",
+            "sagemaker:DescribeAutoMLJobV2",
             "sagemaker:DescribeContext",
             "sagemaker:DescribeDomain",
             "sagemaker:DescribeEndpoint",
@@ -104046,7 +104071,11 @@
         {
           "Sid": "CodeCommitDeletion",
           "Effect": "Allow",
-          "Action": "codecommit:DeleteRepository",
+          "Action": [
+            "codecommit:DeleteRepository",
+            "codecommit:UpdateRepositoryEncryptionKey",
+            "codecommit:PutRepositoryTriggers"
+          ],
           "Resource": "arn:aws:codecommit:*:*:datazone*",
           "Condition": {
             "StringEquals": {
@@ -104081,6 +104110,30 @@
             "codecommit:ListRepositories"
           ],
           "Resource": "*"
+        },
+        {
+          "Sid": "CodeCommitKmsPermissions",
+          "Effect": "Allow",
+          "Action": [
+            "kms:Decrypt",
+            "kms:ReEncryptTo",
+            "kms:ReEncryptFrom",
+            "kms:GenerateDataKey"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            },
+            "StringLike": {
+              "kms:ViaService": [
+                "codecommit.*.amazonaws.com"
+              ]
+            },
+            "Null": {
+              "kms:EncryptionContext:aws:codecommit:id": "false"
+            }
+          }
         },
         {
           "Sid": "GetIAMRole",
@@ -104237,7 +104290,8 @@
                 "AmazonDataZone*",
                 "DataZone*",
                 "for-use-with-amazon-emr-managed-policies",
-                "DomainBucketName"
+                "DomainBucketName",
+                "KmsKeyId"
               ]
             }
           }
@@ -104748,6 +104802,25 @@
           "Condition": {
             "StringEquals": {
               "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        },
+        {
+          "Sid": "GlueKmsPermissions",
+          "Effect": "Allow",
+          "Action": [
+            "kms:Decrypt"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}",
+              "kms:EncryptionContext:glue_catalog_id": "${aws:PrincipalAccount}"
+            },
+            "StringLike": {
+              "kms:ViaService": [
+                "glue.*.amazonaws.com"
+              ]
             }
           }
         },
@@ -105423,6 +105496,28 @@
           }
         },
         {
+          "Sid": "SecretsManagerKmsPermissions",
+          "Effect": "Allow",
+          "Action": [
+            "kms:GenerateDataKey",
+            "kms:Decrypt"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringLike": {
+              "kms:ViaService": [
+                "secretsmanager.*.amazonaws.com"
+              ]
+            },
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            },
+            "Null": {
+              "kms:EncryptionContext:SecretARN": "false"
+            }
+          }
+        },
+        {
           "Sid": "ServiceLinkedRoleCreation",
           "Effect": "Allow",
           "Action": "iam:CreateServiceLinkedRole",
@@ -105533,6 +105628,29 @@
             },
             "Null": {
               "aws:ResourceTag/AmazonDataZoneProject": "false"
+            }
+          }
+        },
+        {
+          "Sid": "RedshiftKmsPermissions",
+          "Effect": "Allow",
+          "Action": [
+            "kms:Decrypt",
+            "kms:Encrypt",
+            "kms:GenerateDataKey"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "StringLike": {
+              "kms:ViaService": [
+                "redshift-serverless.*.amazonaws.com"
+              ]
+            },
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            },
+            "Null": {
+              "kms:EncryptionContext:aws:redshift-serverless:arn": "false"
             }
           }
         },
@@ -106182,7 +106300,7 @@
           }
         },
         {
-          "Sid": "AirflowKmsDescribeKey",
+          "Sid": "KmsDescribeKey",
           "Effect": "Allow",
           "Action": [
             "kms:DescribeKey"
@@ -106307,6 +106425,32 @@
           "Condition": {
             "StringEquals": {
               "aws:ResourceTag/AmazonDataZoneProject": "${aws:PrincipalTag/AmazonDataZoneProject}"
+            }
+          }
+        },
+        {
+          "Sid": "CodeCommitKmsPermissions",
+          "Effect": "Allow",
+          "Action": [
+            "kms:ReEncryptFrom",
+            "kms:ReEncryptTo",
+            "kms:Decrypt",
+            "kms:Encrypt",
+            "kms:GenerateDataKey",
+            "kms:GenerateDataKeyWithoutPlaintext"
+          ],
+          "Resource": "arn:aws:kms:*:*:key/${aws:PrincipalTag/KmsKeyId}",
+          "Condition": {
+            "StringLike": {
+              "kms:ViaService": [
+                "codecommit.*.amazonaws.com"
+              ]
+            },
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            },
+            "Null": {
+              "kms:EncryptionContext:aws:codecommit:id": "false"
             }
           }
         },
@@ -106608,6 +106752,27 @@
             "StringEquals": {
               "glue:RoleAssumedBy": "glue.amazonaws.com",
               "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          }
+        },
+        {
+          "Sid": "GlueKmsPermissions",
+          "Effect": "Allow",
+          "Action": [
+            "kms:Decrypt",
+            "kms:Encrypt",
+            "kms:GenerateDataKey"
+          ],
+          "Resource": "arn:aws:kms:*:*:key/${aws:PrincipalTag/KmsKeyId}",
+          "Condition": {
+            "StringLike": {
+              "kms:ViaService": [
+                "glue.*.amazonaws.com"
+              ]
+            },
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}",
+              "kms:EncryptionContext:glue_catalog_id": "${aws:PrincipalAccount}"
             }
           }
         },
@@ -107688,7 +107853,8 @@
                 "sagemaker.*.amazonaws.com",
                 "emr-serverless.*.amazonaws.com",
                 "s3.*.amazonaws.com",
-                "redshift.*.amazonaws.com"
+                "redshift.*.amazonaws.com",
+                "codecommit.*.amazonaws.com"
               ]
             },
             "StringEquals": {
