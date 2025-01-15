@@ -31917,6 +31917,16 @@
             "account:GetRegionOptStatus"
           ],
           "Resource": "*"
+        },
+        {
+          "Sid": "AllowActionsForCloudFormationHooksIntegration",
+          "Effect": "Allow",
+          "Action": [
+            "cloudformation:SetTypeConfiguration",
+            "cloudformation:DeactivateType",
+            "cloudformation:ActivateType"
+          ],
+          "Resource": "arn:aws:cloudformation:*:*:type/hook/AWS-ControlTower*"
         }
       ]
     }
@@ -32869,7 +32879,11 @@
             "payments:CreatePaymentInstrument",
             "tax:GetTaxInterview",
             "tax:PutTaxInterview",
-            "tax:GetTaxInfoReportingDocument"
+            "tax:GetTaxInfoReportingDocument",
+            "tax:ListSupplementalTaxRegistrations",
+            "tax:PutSupplementalTaxRegistration",
+            "tax:DeleteSupplementalTaxRegistration",
+            "tax:GetTaxRegistration"
           ],
           "Resource": "*"
         },
@@ -68499,10 +68513,6 @@
         {
           "Effect": "Allow",
           "Action": [
-            "ec2:CreateSnapshot",
-            "ec2:AttachVolume",
-            "ec2:DetachVolume",
-            "ec2:ModifyVolume",
             "ec2:DescribeAvailabilityZones",
             "ec2:DescribeInstances",
             "ec2:DescribeSnapshots",
@@ -68511,6 +68521,33 @@
             "ec2:DescribeVolumesModifications"
           ],
           "Resource": "*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "ec2:CreateSnapshot",
+            "ec2:ModifyVolume"
+          ],
+          "Resource": "arn:aws:ec2:*:*:volume/*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "ec2:AttachVolume",
+            "ec2:DetachVolume"
+          ],
+          "Resource": [
+            "arn:aws:ec2:*:*:volume/*",
+            "arn:aws:ec2:*:*:instance/*"
+          ]
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "ec2:CreateVolume",
+            "ec2:EnableFastSnapshotRestores"
+          ],
+          "Resource": "arn:aws:ec2:*:*:snapshot/*"
         },
         {
           "Effect": "Allow",
@@ -68545,7 +68582,7 @@
           "Action": [
             "ec2:CreateVolume"
           ],
-          "Resource": "*",
+          "Resource": "arn:aws:ec2:*:*:volume/*",
           "Condition": {
             "StringLike": {
               "aws:RequestTag/ebs.csi.aws.com/cluster": "true"
@@ -68557,7 +68594,7 @@
           "Action": [
             "ec2:CreateVolume"
           ],
-          "Resource": "*",
+          "Resource": "arn:aws:ec2:*:*:volume/*",
           "Condition": {
             "StringLike": {
               "aws:RequestTag/CSIVolumeName": "*"
@@ -68569,7 +68606,7 @@
           "Action": [
             "ec2:DeleteVolume"
           ],
-          "Resource": "*",
+          "Resource": "arn:aws:ec2:*:*:volume/*",
           "Condition": {
             "StringLike": {
               "ec2:ResourceTag/ebs.csi.aws.com/cluster": "true"
@@ -68581,7 +68618,7 @@
           "Action": [
             "ec2:DeleteVolume"
           ],
-          "Resource": "*",
+          "Resource": "arn:aws:ec2:*:*:volume/*",
           "Condition": {
             "StringLike": {
               "ec2:ResourceTag/CSIVolumeName": "*"
@@ -68593,7 +68630,7 @@
           "Action": [
             "ec2:DeleteVolume"
           ],
-          "Resource": "*",
+          "Resource": "arn:aws:ec2:*:*:volume/*",
           "Condition": {
             "StringLike": {
               "ec2:ResourceTag/kubernetes.io/created-for/pvc/name": "*"
@@ -68603,9 +68640,33 @@
         {
           "Effect": "Allow",
           "Action": [
+            "ec2:CreateSnapshot"
+          ],
+          "Resource": "arn:aws:ec2:*:*:snapshot/*",
+          "Condition": {
+            "StringLike": {
+              "aws:RequestTag/CSIVolumeSnapshotName": "*"
+            }
+          }
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "ec2:CreateSnapshot"
+          ],
+          "Resource": "arn:aws:ec2:*:*:snapshot/*",
+          "Condition": {
+            "StringLike": {
+              "aws:RequestTag/ebs.csi.aws.com/cluster": "true"
+            }
+          }
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
             "ec2:DeleteSnapshot"
           ],
-          "Resource": "*",
+          "Resource": "arn:aws:ec2:*:*:snapshot/*",
           "Condition": {
             "StringLike": {
               "ec2:ResourceTag/CSIVolumeSnapshotName": "*"
@@ -68617,7 +68678,7 @@
           "Action": [
             "ec2:DeleteSnapshot"
           ],
-          "Resource": "*",
+          "Resource": "arn:aws:ec2:*:*:snapshot/*",
           "Condition": {
             "StringLike": {
               "ec2:ResourceTag/ebs.csi.aws.com/cluster": "true"
@@ -78440,6 +78501,20 @@
               "cloudwatch:namespace": "AWS/Notifications"
             }
           },
+          "Resource": "*"
+        },
+        {
+          "Sid": "AllowOrgsActions",
+          "Effect": "Allow",
+          "Action": [
+            "organizations:DescribeAccount",
+            "organizations:DescribeOrganization",
+            "organizations:DescribeOrganizationalUnit",
+            "organizations:ListAccounts",
+            "organizations:ListAWSServiceAccessForOrganization",
+            "organizations:ListChildren",
+            "organizations:ListParents"
+          ],
           "Resource": "*"
         }
       ]
@@ -101719,6 +101794,25 @@
           }
         },
         {
+          "Sid": "GetCodeConnectionsPermissionsStatement",
+          "Effect": "Allow",
+          "Action": [
+            "codeconnections:GetConnection",
+            "codeconnections:GetHost",
+            "codestar-connections:GetConnection",
+            "codestar-connections:GetHost"
+          ],
+          "Resource": "*",
+          "Condition": {
+            "Null": {
+              "aws:ResourceTag/for-use-with-all-datazone-projects": "false"
+            },
+            "StringEquals": {
+              "aws:ResourceTag/for-use-with-all-datazone-projects": "true"
+            }
+          }
+        },
+        {
           "Sid": "ListCodeConnectionsPermissionsStatement",
           "Effect": "Allow",
           "Action": [
@@ -112972,7 +113066,8 @@
           "Sid": "AmazonQDeveloperAccess",
           "Effect": "Allow",
           "Action": [
-            "q:SendMessage"
+            "q:SendMessage",
+            "q:StartConversation"
           ],
           "Resource": "*",
           "Condition": {
