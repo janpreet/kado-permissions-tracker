@@ -11539,10 +11539,13 @@
             "aws-portal:*Billing",
             "aws-portal:*PaymentMethods",
             "aws-portal:*Usage",
+            "billing:CreateBillingView",
+            "billing:DeleteBillingView",
             "billing:GetBillingData",
             "billing:GetBillingDetails",
             "billing:GetBillingNotifications",
             "billing:GetBillingPreferences",
+            "billing:GetBillingView",
             "billing:GetContractInformation",
             "billing:GetCredits",
             "billing:GetIAMAccessPreference",
@@ -11550,7 +11553,13 @@
             "billing:ListBillingViews",
             "billing:PutContractInformation",
             "billing:RedeemCredits",
+            "billing:GetResourcePolicy",
+            "billing:ListSourceViewsForBillingView",
+            "billing:ListTagsForResource",
+            "billing:TagResource",
+            "billing:UntagResource",
             "billing:UpdateBillingPreferences",
+            "billing:UpdateBillingView",
             "billing:UpdateIAMAccessPreference",
             "budgets:CreateBudgetAction",
             "budgets:DeleteBudgetAction",
@@ -79692,7 +79701,9 @@
           "Action": [
             "dms:StartReplicationTask",
             "dms:StopReplicationTask",
+            "dms:ModifyReplicationTask",
             "dms:DeleteReplicationTask",
+            "dms:ModifyReplicationInstance",
             "dms:DeleteReplicationInstance"
           ],
           "Resource": [
@@ -113349,6 +113360,35 @@
             "organizations:ListAccounts"
           ],
           "Resource": "*"
+        }
+      ]
+    }
+  },
+  {
+    "PolicyName": "AmazonSageMakerPartnerAppsFullAccess",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "AmazonSageMakerPartnerListAppsPermission",
+          "Effect": "Allow",
+          "Action": "sagemaker:ListPartnerApps",
+          "Resource": "*"
+        },
+        {
+          "Sid": "AmazonSageMakerPartnerAppsPermission",
+          "Effect": "Allow",
+          "Action": [
+            "sagemaker:CreatePartnerAppPresignedUrl",
+            "sagemaker:DescribePartnerApp",
+            "sagemaker:CallPartnerAppApi"
+          ],
+          "Condition": {
+            "StringEquals": {
+              "aws:ResourceAccount": "${aws:PrincipalAccount}"
+            }
+          },
+          "Resource": "arn:aws:sagemaker:*:*:partner-app/*"
         }
       ]
     }
