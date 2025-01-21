@@ -14863,6 +14863,21 @@
     ]
   },
   {
+    "RoleName": "Portal Dashboard Writer Service Role",
+    "Description": "Can write an Azure Portal Dashboard",
+    "Permissions": [
+      {
+        "actions": [
+          "Microsoft.Portal/dashboards/read",
+          "Microsoft.Portal/dashboards/write"
+        ],
+        "not_actions": [],
+        "data_actions": [],
+        "not_data_actions": []
+      }
+    ]
+  },
+  {
     "RoleName": "Landing Zone Account Reader",
     "Description": "Microsoft.Sovereign Landing Zone Account Reader allowing to read Landing Zone Account, Landing Zone Configurations and Landing Zone Registrations. Also enables read-access to policies and management groups for enabling the full user experience of the Sovereign Services RP in the Azure Portal (as otherwise some elements might not be accessible to end users).",
     "Permissions": [
