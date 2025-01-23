@@ -93,14 +93,19 @@
             "airflow:ListEnvironments",
             "airflow:ListTagsForResource",
             "amplify:GetApp",
+            "amplify:GetBackendEnvironment",
             "amplify:GetBranch",
             "amplify:GetDomainAssociation",
             "amplify:GetJob",
+            "amplify:GetWebhook",
             "amplify:ListApps",
+            "amplify:ListArtifacts",
             "amplify:ListBackendEnvironments",
             "amplify:ListBranches",
             "amplify:ListDomainAssociations",
             "amplify:ListJobs",
+            "amplify:ListTagsForResource",
+            "amplify:ListWebhooks",
             "aoss:BatchGetCollection",
             "aoss:BatchGetLifecyclePolicy",
             "aoss:BatchGetVpcEndpoint",
@@ -123,12 +128,14 @@
             "appconfig:GetDeployment",
             "appconfig:GetDeploymentStrategy",
             "appconfig:GetEnvironment",
+            "appconfig:GetExtension",
             "appconfig:GetHostedConfigurationVersion",
             "appconfig:ListApplications",
             "appconfig:ListConfigurationProfiles",
             "appconfig:ListDeployments",
             "appconfig:ListDeploymentStrategies",
             "appconfig:ListEnvironments",
+            "appconfig:ListExtensions",
             "appconfig:ListHostedConfigurationVersions",
             "appconfig:ListTagsForResource",
             "appfabric:GetAppAuthorization",
@@ -286,6 +293,7 @@
             "bedrock:GetAgent",
             "bedrock:GetAgentActionGroup",
             "bedrock:GetAgentAlias",
+            "bedrock:GetAgentCollaborator",
             "bedrock:GetAgentKnowledgeBase",
             "bedrock:GetAgentVersion",
             "bedrock:GetCustomModel",
@@ -307,6 +315,7 @@
             "bedrock:GetUseCaseForModelAccess",
             "bedrock:ListAgentActionGroups",
             "bedrock:ListAgentAliases",
+            "bedrock:ListAgentCollaborators",
             "bedrock:ListAgentKnowledgeBases",
             "bedrock:ListAgents",
             "bedrock:ListAgentVersions",
@@ -329,11 +338,15 @@
             "billing:GetBillingDetails",
             "billing:GetBillingNotifications",
             "billing:GetBillingPreferences",
+            "billing:GetBillingView",
             "billing:GetContractInformation",
             "billing:GetCredits",
             "billing:GetIAMAccessPreference",
+            "billing:GetResourcePolicy",
             "billing:GetSellerOfRecord",
             "billing:ListBillingViews",
+            "billing:ListSourceViewsForBillingView",
+            "billing:ListTagsForResource",
             "billingconductor:GetBillingGroupCostReport",
             "billingconductor:ListAccountAssociations",
             "billingconductor:ListBillingGroupCostReports",
@@ -1816,10 +1829,19 @@
             "notifications-contacts:ListEmailContacts",
             "notifications-contacts:ListTagsForResource",
             "notifications:GetEventRule",
+            "notifications:GetFeatureOptInStatus",
+            "notifications:GetManagedNotificationChildEvent",
+            "notifications:GetManagedNotificationConfiguration",
+            "notifications:GetManagedNotificationEvent",
             "notifications:GetNotificationConfiguration",
+            "notifications:GetNotificationsAccessForOrganization",
             "notifications:GetNotificationEvent",
             "notifications:ListChannels",
             "notifications:ListEventRules",
+            "notifications:ListManagedNotificationChannelAssociations",
+            "notifications:ListManagedNotificationChildEvents",
+            "notifications:ListManagedNotificationConfigurations",
+            "notifications:ListManagedNotificationEvents",
             "notifications:ListNotificationConfigurations",
             "notifications:ListNotificationEvents",
             "notifications:ListNotificationHubs",
@@ -2280,6 +2302,13 @@
             "ssm-sap:ListOperationEvents",
             "ssm-sap:ListOperations",
             "ssm-sap:ListTagsForResource",
+            "ssm-quicksetup:GetConfiguration",
+            "ssm-quicksetup:GetConfigurationManager",
+            "ssm-quicksetup:GetServiceSettings",
+            "ssm-quicksetup:ListConfigurationManagers",
+            "ssm-quicksetup:ListConfigurations",
+            "ssm-quicksetup:ListQuickSetupTypes",
+            "ssm-quicksetup:ListTagsForResource",
             "ssm:Describe*",
             "ssm:Get*",
             "ssm:List*",
@@ -9023,7 +9052,7 @@
           "Sid": "IAMCreateServiceLinkedRoleForApiDestinations",
           "Effect": "Allow",
           "Action": "iam:CreateServiceLinkedRole",
-          "Resource": "arn:aws:iam::*:role/aws-service-role/AmazonEventBridgeApiDestinationsServiceRolePolicy",
+          "Resource": "arn:aws:iam::*:role/aws-service-role/apidestinations.events.amazonaws.com/AWSServiceRoleForAmazonEventBridgeApiDestinations",
           "Condition": {
             "StringEquals": {
               "iam:AWSServiceName": "apidestinations.events.amazonaws.com"
@@ -26451,9 +26480,9 @@
           ],
           "Resource": "arn:aws:acm-pca:*:*:certificate-authority/*",
           "Condition": {
-            "StringLike": {
+            "ArnLike": {
               "acm-pca:TemplateArn": [
-                "arn:aws:acm-pca:::template/EndEntityCertificate/V*"
+                "arn:aws:acm-pca:*:*:template/EndEntityCertificate/V*"
               ]
             }
           }
@@ -26465,9 +26494,9 @@
           ],
           "Resource": "arn:aws:acm-pca:*:*:certificate-authority/*",
           "Condition": {
-            "StringNotLike": {
+            "ArnNotLike": {
               "acm-pca:TemplateArn": [
-                "arn:aws:acm-pca:::template/EndEntityCertificate/V*"
+                "arn:aws:acm-pca:*:*:template/EndEntityCertificate/V*"
               ]
             }
           }
@@ -32533,9 +32562,9 @@
           ],
           "Resource": "arn:aws:acm-pca:*:*:certificate-authority/*",
           "Condition": {
-            "StringLike": {
+            "ArnLike": {
               "acm-pca:TemplateArn": [
-                "arn:aws:acm-pca:::template/*CACertificate*/V*"
+                "arn:aws:acm-pca:*:*:template/*CACertificate*/V*"
               ]
             }
           }
@@ -32547,9 +32576,9 @@
           ],
           "Resource": "arn:aws:acm-pca:*:*:certificate-authority/*",
           "Condition": {
-            "StringNotLike": {
+            "ArnNotLike": {
               "acm-pca:TemplateArn": [
-                "arn:aws:acm-pca:::template/*CACertificate*/V*"
+                "arn:aws:acm-pca:*:*:template/*CACertificate*/V*"
               ]
             }
           }
@@ -33177,7 +33206,7 @@
           "Sid": "IAMCreateServiceLinkedRoleForApiDestinations",
           "Effect": "Allow",
           "Action": "iam:CreateServiceLinkedRole",
-          "Resource": "arn:aws:iam::*:role/aws-service-role/AmazonEventBridgeApiDestinationsServiceRolePolicy",
+          "Resource": "arn:aws:iam::*:role/aws-service-role/apidestinations.events.amazonaws.com/AWSServiceRoleForAmazonEventBridgeApiDestinations",
           "Condition": {
             "StringEquals": {
               "iam:AWSServiceName": "apidestinations.events.amazonaws.com"
@@ -76996,9 +77025,9 @@
           ],
           "Resource": "arn:aws:acm-pca:*:*:certificate-authority/*",
           "Condition": {
-            "StringLike": {
+            "ArnLike": {
               "acm-pca:TemplateArn": [
-                "arn:aws:acm-pca:::template/EndEntityCertificate/V*"
+                "arn:aws:acm-pca:*:*:template/EndEntityCertificate/V*"
               ]
             }
           }
@@ -77010,9 +77039,9 @@
           ],
           "Resource": "arn:aws:acm-pca:*:*:certificate-authority/*",
           "Condition": {
-            "StringNotLike": {
+            "ArnNotLike": {
               "acm-pca:TemplateArn": [
-                "arn:aws:acm-pca:::template/EndEntityCertificate/V*"
+                "arn:aws:acm-pca:*:*:template/EndEntityCertificate/V*"
               ]
             }
           }
@@ -77063,9 +77092,9 @@
           ],
           "Resource": "arn:aws:acm-pca:*:*:certificate-authority/*",
           "Condition": {
-            "StringLike": {
+            "ArnLike": {
               "acm-pca:TemplateArn": [
-                "arn:aws:acm-pca:::template/*CACertificate*/V*"
+                "arn:aws:acm-pca:*:*:template/*CACertificate*/V*"
               ]
             }
           }
@@ -77077,9 +77106,9 @@
           ],
           "Resource": "arn:aws:acm-pca:*:*:certificate-authority/*",
           "Condition": {
-            "StringNotLike": {
+            "ArnNotLike": {
               "acm-pca:TemplateArn": [
-                "arn:aws:acm-pca:::template/*CACertificate*/V*"
+                "arn:aws:acm-pca:*:*:template/*CACertificate*/V*"
               ]
             }
           }
@@ -78826,6 +78855,16 @@
               "aws:RequestTag/red-hat-managed": "true"
             }
           }
+        },
+        {
+          "Sid": "CreateVolumeFromSnapshot",
+          "Effect": "Allow",
+          "Action": [
+            "ec2:CreateVolume"
+          ],
+          "Resource": [
+            "arn:aws:ec2:*:*:snapshot/*"
+          ]
         },
         {
           "Sid": "CreateSnapshotResourceTag",
