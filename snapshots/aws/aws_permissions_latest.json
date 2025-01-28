@@ -19091,6 +19091,7 @@
           "Action": [
             "cloud9:UpdateUserSettings",
             "cloud9:GetUserSettings",
+            "cloud9:GetMigrationExperiences",
             "iam:GetUser",
             "iam:ListUsers",
             "ec2:DescribeVpcs",
@@ -19248,6 +19249,7 @@
           "Action": [
             "cloud9:GetUserSettings",
             "cloud9:UpdateUserSettings",
+            "cloud9:GetMigrationExperiences",
             "iam:GetUser",
             "iam:ListUsers"
           ],
