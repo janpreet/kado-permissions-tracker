@@ -10806,6 +10806,7 @@
             "ec2:GetHostReservationPurchasePreview",
             "ec2:GetLaunchTemplateData",
             "ec2:GetPasswordData",
+            "ec2:GetSecurityGroupsForVpc",
             "ec2:Import*",
             "ec2:Modify*",
             "ec2:MonitorInstances",
@@ -19661,6 +19662,16 @@
           "Resource": [
             "*"
           ]
+        },
+        {
+          "Sid": "AllowDeleteSyncProfile",
+          "Effect": "Allow",
+          "Action": [
+            "identity-sync:DeleteSyncProfile"
+          ],
+          "Resource": [
+            "arn:aws:identity-sync:*:*:profile/*"
+          ]
         }
       ]
     }
@@ -21120,7 +21131,8 @@
             "config:GetComplianceSummaryByConfigRule",
             "config:GetDiscoveredResourceCounts",
             "config:PutEvaluations",
-            "config:SelectResourceConfig"
+            "config:SelectResourceConfig",
+            "config:BatchGetResourceConfig"
           ],
           "Resource": "*"
         },
@@ -21543,7 +21555,6 @@
             "network-firewall:ListFirewallPolicies",
             "network-firewall:ListFirewalls",
             "network-firewall:ListRuleGroups",
-            "network-firewall:PutResourcePolicy",
             "network-firewall:DescribeResourcePolicy",
             "network-firewall:DeleteResourcePolicy",
             "network-firewall:DescribeLoggingConfiguration",
@@ -21552,6 +21563,18 @@
             "network-firewall:ListTLSInspectionConfigurations"
           ],
           "Resource": "*"
+        },
+        {
+          "Sid": "NetworkFirewallResourcePolicy",
+          "Effect": "Allow",
+          "Action": [
+            "network-firewall:PutResourcePolicy"
+          ],
+          "Resource": [
+            "arn:aws:network-firewall:*:*:firewall-policy/*",
+            "arn:aws:network-firewall:*:*:stateful-rulegroup/*",
+            "arn:aws:network-firewall:*:*:stateless-rulegroup/*"
+          ]
         },
         {
           "Sid": "NetworkFirewallCleanup",
@@ -29583,6 +29606,9 @@
             "docdb-elastic:CopyClusterSnapshot",
             "docdb-elastic:StartCluster",
             "docdb-elastic:StopCluster",
+            "docdb-elastic:GetPendingMaintenanceAction",
+            "docdb-elastic:ListPendingMaintenanceActions",
+            "docdb-elastic:ApplyPendingMaintenanceAction",
             "rds:AddRoleToDBCluster",
             "rds:AddSourceIdentifierToSubscription",
             "rds:AddTagsToResource",
@@ -57779,7 +57805,8 @@
             "arn:aws:ec2:*:*:volume/*",
             "arn:aws:ec2:*:*:snapshot/*",
             "arn:aws:ec2:*:*:instance/*",
-            "arn:aws:ec2:*:*:launch-template/*"
+            "arn:aws:ec2:*:*:launch-template/*",
+            "arn:aws:ec2:*:*:network-interface/*"
           ],
           "Condition": {
             "StringEquals": {
@@ -80509,7 +80536,10 @@
             "docdb-elastic:ListTagsForResource",
             "docdb-elastic:CopyClusterSnapshot",
             "docdb-elastic:StartCluster",
-            "docdb-elastic:StopCluster"
+            "docdb-elastic:StopCluster",
+            "docdb-elastic:GetPendingMaintenanceAction",
+            "docdb-elastic:ListPendingMaintenanceActions",
+            "docdb-elastic:ApplyPendingMaintenanceAction"
           ],
           "Resource": [
             "*"
